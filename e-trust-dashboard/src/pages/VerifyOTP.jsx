@@ -35,9 +35,18 @@ const VerifyOTP = () => {
         </div>
 
         <h1 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Verify Your Account</h1>
-        <p style={{ fontSize: '0.875rem', textAlign: 'center', marginBottom: '2rem' }}>
+        <p style={{ fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem' }}>
           Enter the 6-digit code sent to<br /><strong>{phone || email}</strong>
         </p>
+        
+        <div className="flex gap-4 justify-center mb-8">
+          <div className="flex items-center gap-2" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '1rem' }}>📱</span> SMS Sent
+          </div>
+          <div className="flex items-center gap-2" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '1rem' }}>💬</span> WhatsApp Sent
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex justify-between gap-2 mb-8">
