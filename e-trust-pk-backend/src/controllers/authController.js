@@ -24,6 +24,7 @@ const register = async (req, res) => {
     const store = await Store.create({
       storeName,
       email,
+      phone,
       password,
       storeId: generateStoreId(),
       apiKey: generateApiKey(),
