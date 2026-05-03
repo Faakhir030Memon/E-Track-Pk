@@ -64,6 +64,9 @@ const validateRegister = [
   body('email')
     .notEmpty().withMessage('Email is required')
     .isEmail().withMessage('Invalid email format'),
+  body('phone')
+    .notEmpty().withMessage('Phone number is required')
+    .matches(/^(\+?92|0)?3\d{9}$/).withMessage('Invalid Pakistani phone number format'),
   body('password')
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
