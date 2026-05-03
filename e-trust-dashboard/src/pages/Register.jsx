@@ -34,7 +34,9 @@ const Register = () => {
       });
       navigate('/verify-otp'); // Directing to OTP as per image flow
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed.');
+      const serverError = err.response?.data?.error || 'Registration failed.';
+      const debugInfo = err.response?.data?.debug ? ` (${err.response.data.debug})` : '';
+      setError(`${serverError}${debugInfo}`);
     } finally {
       setIsLoading(false);
     }
