@@ -38,6 +38,9 @@ dependencies:
   provider: ^6.1.5+1
   firebase_messaging: ^16.2.0
   socket_io_client: ^3.1.4
+  google_fonts: ^7.0.2
+  fl_chart: ^0.72.0
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   flutter_test:
