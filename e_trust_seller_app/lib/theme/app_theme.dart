@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryGreen = Color(0xFF10B981);
-  static const Color bgDark = Color(0xFF080B12);
-  static const Color cardDark = Color(0xFF121826);
-  static const Color textPrimary = Color(0xFFF3F4F6);
-  static const Color textSecondary = Color(0xFF9CA3AF);
+  static const Color primary = Color(0xFF10B981); // Emerald Green
+  static const Color background = Color(0xFF0F172A); // Dark Slate
+  static const Color cardBg = Color(0xFF1E293B);
+  static const Color textPrimary = Colors.white;
+  static const Color textSecondary = Color(0xFF94A3B8);
   static const Color danger = Color(0xFFEF4444);
   static const Color warning = Color(0xFFF59E0B);
   static const Color border = Color(0x11FFFFFF);

@@ -156,18 +156,20 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex-between mb-6">
               <h3 style={{ fontSize: '0.9375rem' }}>Recent Alerts</h3>
-              <a href="#" style={{ fontSize: '0.75rem' }}>View All</a>
+              <a href="/fraud-feed" style={{ fontSize: '0.75rem', color: 'var(--brand-primary)' }}>View All</a>
             </div>
             <div className="flex-col gap-4">
-              {[101, 102, 103].map((id, i) => (
-                <div key={id} className="flex items-start gap-3 p-3 bg-dark rounded-lg border border-border">
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: i === 0 ? '#EF4444' : '#F59E0B', marginTop: '6px' }}></div>
+              {feed && feed.length > 0 ? feed.map((item, i) => (
+                <div key={item._id} className="flex items-start gap-3 p-3 bg-dark rounded-lg border border-border">
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.riskScore > 70 ? '#EF4444' : '#F59E0B', marginTop: '6px' }}></div>
                   <div>
-                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', fontWeight: 600 }}>High Risk Order #ORD-{id}</p>
-                    <p style={{ fontSize: '0.7rem' }}>{i * 10 + 2} min ago</p>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', fontWeight: 600 }}>Risk Detected: {item.customerPhoneHash.substring(0, 10)}...</p>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Score: {item.riskScore} • {new Date(item.createdAt).toLocaleTimeString()}</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center py-4 color-muted" style={{ fontSize: '0.8rem' }}>No recent alerts</div>
+              )}
             </div>
           </div>
 
@@ -177,22 +179,22 @@ const Dashboard = () => {
               <thead>
                 <tr>
                   <th>Hashed ID</th>
-                  <th>Score</th>
-                  <th>Orders</th>
+                  <th>Risk Score</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  { id: '5e884898...', score: 20, orders: 12 },
-                  { id: 'b1946ac9...', score: 35, orders: 8 },
-                  { id: 'c81e72bd...', score: 28, orders: 15 },
-                ].map((c, i) => (
+                {analytics?.riskSegments?.highRisk ? [analytics.riskSegments.highRisk].map((c, i) => (
                   <tr key={i}>
-                    <td className="mono" style={{ fontSize: '0.8125rem' }}>{c.id}</td>
-                    <td><span className={`badge ${c.score < 30 ? 'badge-danger' : 'badge-warning'}`}>{c.score}</span></td>
-                    <td>{c.orders}</td>
+                    <td className="mono" style={{ fontSize: '0.75rem' }}>{c._id || 'unknown_hash'}</td>
+                    <td><span className="badge badge-danger">{c.count} Reports</span></td>
+                    <td><span className="badge badge-warning">High Risk</span></td>
                   </tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No high-risk data found</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
