@@ -11,12 +11,42 @@ class AppTheme {
   static const Color warning = Color(0xFFF59E0B);
   static const Color border = Color(0x11FFFFFF);
 
+  static TextStyle get headingStyle => GoogleFonts.outfit(
+    color: textPrimary,
+    fontWeight: FontWeight.bold,
+    fontSize: 24,
+  );
+
+  static TextStyle get bodyStyle => GoogleFonts.inter(
+    color: textSecondary,
+    fontSize: 14,
+  );
+
+  static InputDecoration inputDecoration(String hint) => InputDecoration(
+    hintText: hint,
+    hintStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+    filled: true,
+    fillColor: const Color(0xFF1E293B),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide.none,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(color: Color(0x11FFFFFF)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: const BorderSide(color: primary, width: 2),
+    ),
+  );
+
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: bgDark,
-    primaryColor: primaryGreen,
+    scaffoldBackgroundColor: background,
+    primaryColor: primary,
     colorScheme: const ColorScheme.dark(
-      primary: primaryGreen,
       secondary: primaryGreen,
       surface: cardDark,
       error: danger,

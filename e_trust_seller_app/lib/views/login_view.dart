@@ -93,22 +93,35 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 50),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(hintText: "Email / Store ID", prefixIcon: Icon(Icons.email_outlined)),
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: AppTheme.inputDecoration("Email / Store ID").copyWith(
+                prefixIcon: const Icon(Icons.email_outlined, color: AppTheme.primary),
+              ),
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(hintText: "Password", prefixIcon: Icon(Icons.lock_outline)),
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: AppTheme.inputDecoration("Password").copyWith(
+                prefixIcon: const Icon(Icons.lock_outline, color: AppTheme.primary),
+              ),
             ),
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
-              height: 54,
+              height: 56,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
                 onPressed: _isLoading ? null : _login,
-                child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: _isLoading 
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) 
+                  : const Text("Sign In", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
