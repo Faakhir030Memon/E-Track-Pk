@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [analytics, setAnalytics] = useState(null);
   const [feed, setFeed] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,23 +32,26 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <DashboardLayout>
-        <div className="flex-center h-full"><div className="spinner"></div></div>
+        <div className="flex-center h-full" style={{ minHeight: '60vh' }}>
+          <div className="spinner"></div>
+          <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>Loading your dashboard...</p>
+        </div>
       </DashboardLayout>
     );
   }
 
   const statCards = [
-    { label: 'Total Orders', value: '12,540', trend: '+18.8%', isUp: true },
-    { label: 'High Risk Orders', value: '1,257', trend: '+12.4%', isUp: false },
-    { label: 'Sale Orders', value: '9,876', trend: '+23.1%', isUp: true },
-    { label: 'Saved Revenue', value: 'PKR 1,85,000', trend: '+15.3%', isUp: true },
+    { label: 'Total Orders', value: analytics?.summary?.totalOrders || '0', trend: '+12.5%', isUp: true },
+    { label: 'High Risk', value: analytics?.summary?.highRiskCount || '0', trend: '+2.4%', isUp: false },
+    { label: 'Avg Trust Score', value: analytics?.summary?.avgTrustScore?.toFixed(1) || '85.2', trend: '+5.1%', isUp: true },
+    { label: 'Saved Revenue', value: `PKR ${((analytics?.summary?.highRiskCount || 0) * 1200).toLocaleString()}`, trend: '+15.3%', isUp: true },
   ];
 
   const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
   const pieData = [
-    { name: 'High Risk', value: 18 },
-    { name: 'Risky', value: 30 },
-    { name: 'Safe', value: 52 },
+    { name: 'High Risk', value: analytics?.summary?.highRiskCount || 10 },
+    { name: 'Risky', value: 20 },
+    { name: 'Safe', value: 70 },
   ];
 
   return (
@@ -54,8 +59,8 @@ const Dashboard = () => {
       <div className="animate-fade-in">
         <header className="flex-between mb-8">
           <div>
-            <h1 style={{ fontSize: '1.5rem' }}>Welcome back, Ali Store 👋</h1>
-            <p style={{ fontSize: '0.8125rem' }}>01 May - 07 May 2026</p>
+            <h1 style={{ fontSize: '1.5rem' }}>Welcome back, {user?.storeName || 'Store'} 👋</h1>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Monitoring fraud for {user?.platform || 'your'} store</p>
           </div>
           <div className="flex gap-3">
             <button className="btn btn-outline" style={{ padding: '0.5rem' }}>
