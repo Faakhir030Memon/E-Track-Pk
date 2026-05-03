@@ -14,6 +14,7 @@ import OrdersMonitoring from './pages/OrdersMonitoring';
 import Analytics from './pages/Analytics';
 import Blacklist from './pages/Blacklist';
 import Integrations from './pages/Integrations';
+import Pricing from './pages/Pricing';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/blacklist" element={<Blacklist />} />
             <Route path="/integrations" element={<Integrations />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
