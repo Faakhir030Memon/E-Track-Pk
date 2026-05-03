@@ -32,33 +32,31 @@ const Sidebar = () => {
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
     )},
     { name: 'Settings', path: '/settings', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    )},
-    { name: 'Users', path: '/profile', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    )},
-    { name: 'Support', path: '#', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    )},
+  const menuItems = [
+    { name: 'Dashboard', icon: <FiGrid />, path: '/' },
+    { name: 'Analytics', icon: <FiTrendingUp />, path: '/analytics' },
+    { name: 'Fraud Feed', icon: <FiShield />, path: '/fraud-feed' },
+    { name: 'Order Logs', icon: <FiFileText />, path: '/orders' },
+    { name: 'Settings', icon: <FiSettings />, path: '/settings' },
   ];
 
   return (
     <aside className="sidebar animate-fade-in">
-      <div className="sidebar-header">
-        <img src="/logo.png" alt="E-Trust PK" style={{ height: '40px', objectFit: 'contain' }} />
-        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, margin: 0 }}>
+      <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
+        <img src="/logo.png" alt="E-Trust PK" style={{ height: '36px', objectFit: 'contain' }} />
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
           E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span>
         </h2>
       </div>
 
       <nav className="flex-col gap-1 flex-grow">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.name}
-            to={item.path}
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        {menuItems.map((item) => (
+          <NavLink 
+            key={item.name} 
+            to={item.path} 
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            {item.icon}
+            <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
             <span>{item.name}</span>
           </NavLink>
         ))}
