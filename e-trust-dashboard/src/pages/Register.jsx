@@ -49,7 +49,12 @@ const Register = () => {
       <div className="auth-card animate-slide-up">
         <div className="flex-col items-center mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <img src="/logo.png" alt="Logo" style={{ height: '48px', objectFit: 'contain' }} />
+            <div style={{ width: '48px', height: '48px' }}>
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="#10B981"/>
+                <text x="12" y="15.5" textAnchor="middle" fill="white" fontSize="10" fontFamily="Arial" fontWeight="bold">E</text>
+              </svg>
+            </div>
             <h2 style={{ margin: 0, fontSize: '1.125rem' }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
           </div>
           <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Create Your Store Account</h1>
