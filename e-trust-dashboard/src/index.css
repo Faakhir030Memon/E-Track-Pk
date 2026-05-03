@@ -227,23 +227,65 @@ p { color: var(--text-secondary); font-size: 0.9375rem; }
 }
 .nav-link.active { background: rgba(16, 185, 129, 0.1); }
 
-/* ── Auth Styles ───────────────────────────────────── */
+/* ── Auth Styles (Light Theme) ───────────────────────── */
 .auth-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent);
+  background: #F1F5F9; /* Light slate background */
+  color: #1E293B;
 }
+
 .auth-card {
   width: 100%;
-  max-width: 420px;
-  padding: 2.5rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  max-width: 440px;
+  padding: 3rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  position: relative;
+  color: #334155;
+}
+
+.auth-card h1 { color: #0F172A; }
+.auth-card p { color: #64748B; }
+
+.auth-card .input {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
+}
+
+.auth-card .input:focus {
+  background: #fff;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748B;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: all 0.2s;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.back-btn:hover {
+  color: var(--brand-primary);
+  background: rgba(16, 185, 129, 0.05);
 }
 
 /* ── Grid Helpers ──────────────────────────────────── */

@@ -27,16 +27,21 @@ const VerifyOTP = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-card animate-slide-up flex-col items-center">
+        <button className="back-btn" onClick={() => navigate('/register')}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+
         <div className="flex items-center gap-3 mb-8">
-          <div style={{ background: '#fff', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+          <div style={{ background: '#F8FAFC', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E8F0' }}>
             <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
           </div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
         </div>
 
         <h1 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Verify Your Account</h1>
-        <p style={{ fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem' }}>
-          Enter the 6-digit code sent to<br /><strong>{phone || email}</strong>
+        <p style={{ fontSize: '0.875rem', textAlign: 'center', marginBottom: '1.5rem', color: '#64748B' }}>
+          Enter the 6-digit code sent to<br /><strong style={{ color: '#0F172A' }}>{phone || email}</strong>
         </p>
         
         <div className="flex gap-4 justify-center mb-8">

@@ -28,19 +28,24 @@ const Login = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-card animate-slide-up">
+        <button className="back-btn" onClick={() => navigate('/')}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+
         <div className="flex-col items-center mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div style={{ background: '#fff', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: '#F8FAFC', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E8F0' }}>
               <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
             </div>
-            <h2 style={{ margin: 0, fontSize: '1.125rem' }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
+            <h2 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 800 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
           </div>
           <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Welcome Back</h1>
           <p>Sign in to your account</p>
         </div>
 
         {error && (
-          <div style={{ background: 'var(--danger-bg)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8125rem', marginBottom: '1.5rem', border: '1px solid var(--danger-border)', textAlign: 'center' }}>
+          <div style={{ background: '#FEF2F2', color: '#DC2626', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8125rem', marginBottom: '1.5rem', border: '1px solid #FEE2E2', textAlign: 'center' }}>
             {error}
           </div>
         )}
