@@ -28,12 +28,7 @@ const VerifyOTP = () => {
     <div className="auth-wrapper">
       <div className="auth-card animate-slide-up flex-col items-center">
         <div className="flex items-center gap-3 mb-8">
-          <div style={{ width: '48px', height: '48px' }}>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="#10B981"/>
-              <text x="12" y="15.5" textAnchor="middle" fill="white" fontSize="10" fontFamily="Arial" fontWeight="bold">E</text>
-            </svg>
-          </div>
+          <img src="/logo.png" alt="Logo" style={{ height: '48px', objectFit: 'contain' }} />
           <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
         </div>
 
