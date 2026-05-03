@@ -36,12 +36,12 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      <div className="flex items-center gap-3 px-2 mb-10">
-        <div className="flex items-center justify-center" style={{ width: '32px', height: '32px', background: 'var(--brand-primary)', borderRadius: '8px' }}>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: '18px' }}>E</span>
-        </div>
-        <h2 style={{ fontSize: '1rem', letterSpacing: '-0.02em', margin: 0 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
+    <aside className="sidebar animate-fade-in">
+      <div className="sidebar-header">
+        <img src="/logo.png" alt="E-Trust PK" style={{ height: '40px', objectFit: 'contain' }} />
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 700, margin: 0 }}>
+          E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span>
+        </h2>
       </div>
 
       <nav className="flex-col gap-1 flex-grow">
