@@ -36,12 +36,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar animate-fade-in">
       <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-        <div style={{ width: '36px', height: '36px', flexShrink: 0 }}>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="#10B981"/>
-            <text x="12" y="15.5" textAnchor="middle" fill="white" fontSize="10" fontFamily="Arial" fontWeight="bold">E</text>
-          </svg>
-        </div>
+        <img src="/logo.png" alt="E-Trust PK" style={{ height: '36px', objectFit: 'contain' }} />
         <h2 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
           E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span>
         </h2>
