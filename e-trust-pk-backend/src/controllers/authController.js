@@ -9,7 +9,7 @@ const NotificationService = require('../services/notificationService');
  */
 const register = async (req, res) => {
   try {
-    const { storeName, email, password, platform } = req.body;
+    const { storeName, email, phone, password, platform } = req.body;
 
     // Check if store already exists
     const existingStore = await Store.findOne({ email });
