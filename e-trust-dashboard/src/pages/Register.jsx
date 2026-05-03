@@ -7,7 +7,7 @@ const Register = () => {
     storeName: '',
     email: '',
     password: '',
-    platform: 'shopify'
+    confirmPassword: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,82 +20,75 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      return setError('Passwords do not match');
+    }
     setError('');
     setIsLoading(true);
 
     try {
-      await register(formData);
-      navigate('/');
+      await register({
+        storeName: formData.storeName,
+        email: formData.email,
+        password: formData.password
+      });
+      navigate('/verify-otp'); // Directing to OTP as per image flow
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      setError(err.response?.data?.error || 'Registration failed.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base" style={{ padding: '2rem' }}>
-      <div className="card w-full animate-fade-in" style={{ maxWidth: '480px', padding: '3rem 2.5rem' }}>
-        <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center mb-4" style={{ width: '48px', height: '48px', background: 'var(--brand-primary)', borderRadius: '12px', boxShadow: '0 0 20px var(--brand-glow)' }}>
-            <span style={{ color: '#fff', fontWeight: 800, fontSize: '24px' }}>E</span>
+    <div className="auth-wrapper">
+      <div className="auth-card animate-slide-up">
+        <div className="flex-col items-center mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center" style={{ width: '36px', height: '36px', background: 'var(--brand-primary)', borderRadius: '8px' }}>
+              <span style={{ color: '#fff', fontWeight: 800, fontSize: '18px' }}>E</span>
+            </div>
+            <h2 style={{ margin: 0, fontSize: '1.125rem' }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
           </div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Register Store</h1>
-          <p style={{ fontSize: '0.9rem' }}>Join the global trust network in Pakistan</p>
+          <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Create Your Store Account</h1>
+          <p style={{ fontSize: '0.875rem' }}>Join hundreds of smart stores</p>
         </div>
 
         {error && (
-          <div className="badge badge-red w-full mb-6 py-3" style={{ borderRadius: '8px', justifyContent: 'center' }}>
+          <div style={{ background: 'var(--danger-bg)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8125rem', marginBottom: '1rem', border: '1px solid var(--danger-border)', textAlign: 'center' }}>
             {error}
           </div>
         )}
 
         <form className="flex-col gap-4" onSubmit={handleSubmit}>
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Store Name</label>
+          <div className="input-group">
+            <label className="input-label">Store Name</label>
             <input
               type="text"
               name="storeName"
               className="input"
-              placeholder="e.g. Urban Style PK"
+              placeholder="My Awesome Store"
               value={formData.storeName}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Email Address</label>
+          <div className="input-group">
+            <label className="input-label">Email</label>
             <input
               type="email"
               name="email"
               className="input"
-              placeholder="admin@store.com"
+              placeholder="seller@store.com"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Platform</label>
-            <select
-              name="platform"
-              className="input"
-              value={formData.platform}
-              onChange={handleChange}
-              style={{ appearance: 'none' }}
-            >
-              <option value="shopify">Shopify</option>
-              <option value="woocommerce">WooCommerce</option>
-              <option value="custom">Custom MERN/Other</option>
-              <option value="instagram">Instagram Seller</option>
-              <option value="facebook">Facebook Marketplace</option>
-            </select>
-          </div>
-
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Password</label>
+          <div className="input-group">
+            <label className="input-label">Password</label>
             <input
               type="password"
               name="password"
@@ -107,16 +100,35 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full mt-2" disabled={isLoading}>
+          <div className="input-group">
+            <label className="input-label">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              className="input"
+              placeholder="••••••••"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="flex gap-2 items-center mb-2">
+            <input type="checkbox" style={{ accentColor: 'var(--brand-primary)' }} required />
+            <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              I agree to the <a href="#">Terms & Conditions</a>
+            </label>
+          </div>
+
+          <button type="submit" className="btn btn-primary w-full py-3" disabled={isLoading}>
             {isLoading ? <div className="spinner"></div> : 'Create Account'}
           </button>
         </form>
 
-        <div className="divider"></div>
-
-        <p className="text-center" style={{ fontSize: '0.85rem' }}>
-          Already registered? <Link to="/login" style={{ color: 'var(--brand-primary)', fontWeight: 600 }}>Sign In</Link>
-        </p>
+        <div className="flex-center mt-6 gap-1">
+          <p style={{ fontSize: '0.8125rem' }}>Already have an account?</p>
+          <Link to="/login" style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--brand-primary)' }}>Login</Link>
+        </div>
       </div>
     </div>
   );

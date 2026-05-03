@@ -19,44 +19,50 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base" style={{ padding: '2rem' }}>
-      <div className="card w-full animate-fade-in" style={{ maxWidth: '420px', padding: '3rem 2.5rem' }}>
-        <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center justify-center mb-4" style={{ width: '48px', height: '48px', background: 'var(--brand-primary)', borderRadius: '12px', boxShadow: '0 0 20px var(--brand-glow)' }}>
-            <span style={{ color: '#fff', fontWeight: 800, fontSize: '24px' }}>E</span>
+    <div className="auth-wrapper">
+      <div className="auth-card animate-slide-up">
+        <div className="flex-col items-center mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center" style={{ width: '40px', height: '40px', background: 'var(--brand-primary)', borderRadius: '10px' }}>
+              <span style={{ color: '#fff', fontWeight: 800, fontSize: '20px' }}>E</span>
+            </div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem', letterSpacing: '-0.02em' }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
           </div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Welcome Back</h1>
-          <p style={{ fontSize: '0.9rem' }}>Sign in to manage your trust scores</p>
+          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Welcome Back</h1>
+          <p>Sign in to your account</p>
         </div>
 
         {error && (
-          <div className="badge badge-red w-full mb-6 py-3" style={{ borderRadius: '8px', justifyContent: 'center' }}>
+          <div style={{ background: 'var(--danger-bg)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8125rem', marginBottom: '1.5rem', border: '1px solid var(--danger-border)', textAlign: 'center' }}>
             {error}
           </div>
         )}
 
-        <form className="flex-col gap-4" onSubmit={handleSubmit}>
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Email Address</label>
+        <form className="flex-col gap-5" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label className="input-label">Email / Store ID</label>
             <input
               type="email"
               className="input"
-              placeholder="name@store.com"
+              placeholder="enter@store.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="flex-col gap-2">
-            <label style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Password</label>
+          <div className="input-group">
+            <div className="flex-between">
+              <label className="input-label">Password</label>
+              <a href="#" style={{ fontSize: '0.75rem', fontWeight: 500 }}>Forgot Password?</a>
+            </div>
             <input
               type="password"
               className="input"
@@ -67,16 +73,15 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full mt-2" disabled={isLoading}>
-            {isLoading ? <div className="spinner"></div> : 'Sign In'}
+          <button type="submit" className="btn btn-primary w-full py-3" disabled={isLoading}>
+            {isLoading ? <div className="spinner"></div> : 'Login'}
           </button>
         </form>
 
-        <div className="divider"></div>
-
-        <p className="text-center" style={{ fontSize: '0.85rem' }}>
-          Don't have an account? <Link to="/register" style={{ color: 'var(--brand-primary)', fontWeight: 600 }}>Create Store</Link>
-        </p>
+        <div className="flex-center mt-8 gap-1">
+          <p style={{ fontSize: '0.8125rem' }}>Don't have an account?</p>
+          <Link to="/register" style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--brand-primary)' }}>Sign up</Link>
+        </div>
       </div>
     </div>
   );
