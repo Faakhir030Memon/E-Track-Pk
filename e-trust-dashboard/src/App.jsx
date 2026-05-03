@@ -43,7 +43,8 @@ function App() {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
+        </Router>
+      </NotificationProvider>
     </AuthProvider>
   );
 }
