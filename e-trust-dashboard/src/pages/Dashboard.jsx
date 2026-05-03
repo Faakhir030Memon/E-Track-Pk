@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import api from '../utils/api';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Dashboard = () => {
   const [analytics, setAnalytics] = useState(null);
@@ -13,7 +13,7 @@ const Dashboard = () => {
       try {
         const [analyticsRes, feedRes] = await Promise.all([
           api.get('/trust/analytics?days=7'),
-          api.get('/trust/feed?limit=10')
+          api.get('/trust/feed?limit=5')
         ]);
         setAnalytics(analyticsRes.data.data);
         setFeed(feedRes.data.data);
@@ -30,147 +30,164 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-full py-20">
-          <div className="spinner"></div>
-        </div>
+        <div className="flex-center h-full"><div className="spinner"></div></div>
       </DashboardLayout>
     );
   }
 
-  const stats = [
-    { name: 'Total Checks', value: analytics?.overview.totalOrders || 0, icon: '🔍' },
-    { name: 'RTO Prevented', value: analytics?.overview.returned || 0, icon: '🚫' },
-    { name: 'Money Saved', value: `Rs. ${(analytics?.revenue.potentialSavings || 0).toLocaleString()}`, icon: '💰' },
-    { name: 'Delivery Rate', value: `${analytics?.overview.deliveryRate || 0}%`, icon: '🚚' },
+  const statCards = [
+    { label: 'Total Orders', value: '12,540', trend: '+18.8%', isUp: true },
+    { label: 'High Risk Orders', value: '1,257', trend: '+12.4%', isUp: false },
+    { label: 'Sale Orders', value: '9,876', trend: '+23.1%', isUp: true },
+    { label: 'Saved Revenue', value: 'PKR 1,85,000', trend: '+15.3%', isUp: true },
+  ];
+
+  const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
+  const pieData = [
+    { name: 'High Risk', value: 18 },
+    { name: 'Risky', value: 30 },
+    { name: 'Safe', value: 52 },
   ];
 
   return (
     <DashboardLayout>
       <div className="animate-fade-in">
-        <header className="mb-10">
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Store Overview</h1>
-          <p>Real-time trust metrics and fraud prevention data.</p>
+        <header className="flex-between mb-8">
+          <div>
+            <h1 style={{ fontSize: '1.5rem' }}>Welcome back, Ali Store 👋</h1>
+            <p style={{ fontSize: '0.8125rem' }}>01 May - 07 May 2026</p>
+          </div>
+          <div className="flex gap-3">
+            <button className="btn btn-outline" style={{ padding: '0.5rem' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </button>
+            <div className="flex items-center gap-2 px-3 py-1 bg-card rounded-md border border-border">
+              <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#374151' }}></div>
+              <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>Ali Store</span>
+            </div>
+          </div>
         </header>
 
-        {/* Stats Grid */}
-        <div className="grid gap-6 mb-10" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-          {stats.map((stat) => (
-            <div key={stat.name} className="card flex-col gap-2" style={{ position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>{stat.icon}</div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.name}</span>
-              <span style={{ fontSize: '2rem', fontWeight: 800 }}>{stat.value}</span>
+        {/* Top Stats Grid */}
+        <div className="grid-4 mb-8">
+          {statCards.map((stat, i) => (
+            <div key={i} className="card stat-card">
+              <span className="stat-label">{stat.label}</span>
+              <div className="flex items-baseline gap-2">
+                <span className="stat-value">{stat.value}</span>
+                <span className={`stat-trend ${stat.isUp ? 'trend-up' : 'trend-down'}`}>
+                  {stat.isUp ? '↑' : '↓'} {stat.trend}
+                </span>
+              </div>
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>vs last 7 days</p>
             </div>
           ))}
         </div>
 
-        <div className="grid gap-6" style={{ gridTemplateColumns: '1.8fr 1.2fr' }}>
-          {/* Activity Chart */}
-          <div className="card flex-col gap-6">
-            <div className="flex justify-between items-center">
-              <h3 style={{ fontSize: '1.1rem' }}>Order Activity</h3>
-              <div className="flex gap-2">
-                <div className="badge badge-green">Delivered</div>
-                <div className="badge badge-red">Returned</div>
+        {/* Charts Row */}
+        <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: '1.8fr 1.2fr' }}>
+          <div className="card">
+            <div className="flex-between mb-6">
+              <h3 style={{ fontSize: '0.9375rem' }}>Orders Trend</h3>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }}></div><span style={{ fontSize: '0.7rem' }}>Delivered</span></div>
+                <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B' }}></div><span style={{ fontSize: '0.7rem' }}>Returned</span></div>
+                <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></div><span style={{ fontSize: '0.7rem' }}>High Risk</span></div>
               </div>
             </div>
-            <div style={{ width: '100%', height: '300px' }}>
+            <div style={{ height: '240px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={analytics?.dailyBreakdown || []}>
                   <defs>
-                    <linearGradient id="colorDelivered" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--green)" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="var(--green)" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorReturned" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--red)" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="var(--red)" stopOpacity={0}/>
+                    <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                  <XAxis dataKey="date" stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} axisLine={false} />
-                  <Tooltip 
-                    contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '8px' }}
-                    itemStyle={{ fontSize: '0.8rem' }}
-                  />
-                  <Area type="monotone" dataKey="delivered" stroke="var(--green)" fillOpacity={1} fill="url(#colorDelivered)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="returned" stroke="var(--red)" fillOpacity={1} fill="url(#colorReturned)" strokeWidth={2} />
+                  <XAxis dataKey="date" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} />
+                  <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ background: '#111827', border: '1px solid var(--border)', borderRadius: '8px' }} />
+                  <Area type="monotone" dataKey="total" stroke="var(--brand-primary)" fillOpacity={1} fill="url(#colorTrend)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Risk Profile */}
-          <div className="card flex-col gap-6">
-            <h3 style={{ fontSize: '1.1rem' }}>Risk Distribution</h3>
-            <div className="flex-col gap-4">
-              {[
-                { label: 'Safe Customers', count: analytics?.riskDistribution.safe || 0, color: 'var(--green)' },
-                { label: 'Warning', count: analytics?.riskDistribution.warning || 0, color: 'var(--yellow)' },
-                { label: 'High Risk', count: analytics?.riskDistribution.highRisk || 0, color: 'var(--red)' },
-              ].map((item) => (
-                <div key={item.label} className="flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span style={{ fontSize: '0.85rem' }}>{item.label}</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{item.count}</span>
-                  </div>
-                  <div style={{ height: '6px', width: '100%', background: 'var(--bg-elevated)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ 
-                      height: '100%', 
-                      width: `${analytics?.overview.totalOrders ? (item.count / analytics.overview.totalOrders) * 100 : 0}%`, 
-                      background: item.color 
-                    }}></div>
-                  </div>
-                </div>
-              ))}
+          <div className="card flex-col items-center">
+            <h3 style={{ fontSize: '0.9375rem', alignSelf: 'flex-start', marginBottom: '1.5rem' }}>Risk Distribution</h3>
+            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>12,540</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Total Orders</div>
+              </div>
             </div>
-            <div className="divider" style={{ margin: '0.5rem 0' }}></div>
-            <div style={{ padding: '1rem', background: 'var(--bg-elevated)', borderRadius: '8px' }}>
-              <p style={{ fontSize: '0.8rem', fontStyle: 'italic' }}>
-                "High Risk" orders were flagged automatically based on past return behavior in other stores.
-              </p>
+            <div className="w-full mt-4 flex justify-between px-4">
+              <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></div><span style={{ fontSize: '0.75rem' }}>High Risk (18%)</span></div>
+              <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B' }}></div><span style={{ fontSize: '0.75rem' }}>Risky (30%)</span></div>
             </div>
           </div>
         </div>
 
-        {/* Recent Feed */}
-        <div className="card mt-6" style={{ padding: 0 }}>
-          <div className="flex justify-between items-center px-6 py-4 border-bottom" style={{ borderBottom: '1px solid var(--border)' }}>
-            <h3 style={{ fontSize: '1.1rem' }}>Recent Activities</h3>
-            <button className="btn btn-ghost" style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}>View All</button>
+        {/* Lists Row */}
+        <div className="grid gap-6" style={{ gridTemplateColumns: '1.2fr 1.8fr' }}>
+          <div className="card">
+            <div className="flex-between mb-6">
+              <h3 style={{ fontSize: '0.9375rem' }}>Recent Alerts</h3>
+              <a href="#" style={{ fontSize: '0.75rem' }}>View All</a>
+            </div>
+            <div className="flex-col gap-4">
+              {[101, 102, 103].map((id, i) => (
+                <div key={id} className="flex items-start gap-3 p-3 bg-dark rounded-lg border border-border">
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: i === 0 ? '#EF4444' : '#F59E0B', marginTop: '6px' }}></div>
+                  <div>
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', fontWeight: 600 }}>High Risk Order #ORD-{id}</p>
+                    <p style={{ fontSize: '0.7rem' }}>{i * 10 + 2} min ago</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="overflow-hidden">
-            <table className="table">
+
+          <div className="card">
+            <h3 style={{ fontSize: '0.9375rem', marginBottom: '1.5rem' }}>Top Risky Customers</h3>
+            <table className="data-table">
               <thead>
                 <tr>
-                  <th>Order ID</th>
-                  <th>Hashed User</th>
-                  <th>Status</th>
-                  <th>Value</th>
-                  <th>Date</th>
+                  <th>Hashed ID</th>
+                  <th>Score</th>
+                  <th>Orders</th>
                 </tr>
               </thead>
               <tbody>
-                {feed.length > 0 ? feed.map((item) => (
-                  <tr key={item._id}>
-                    <td className="mono" style={{ fontWeight: 600 }}>{item.orderId}</td>
-                    <td className="mono" style={{ fontSize: '0.75rem', opacity: 0.6 }}>{item.hashedId.substring(0, 12)}...</td>
-                    <td>
-                      <span className={`badge ${
-                        item.status === 'delivered' ? 'badge-green' : 
-                        item.status === 'pending' ? 'badge-yellow' : 'badge-red'
-                      }`}>
-                        {item.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td>Rs. {item.orderValue?.toLocaleString()}</td>
-                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                {[
+                  { id: '5e884898...', score: 20, orders: 12 },
+                  { id: 'b1946ac9...', score: 35, orders: 8 },
+                  { id: 'c81e72bd...', score: 28, orders: 15 },
+                ].map((c, i) => (
+                  <tr key={i}>
+                    <td className="mono" style={{ fontSize: '0.8125rem' }}>{c.id}</td>
+                    <td><span className={`badge ${c.score < 30 ? 'badge-danger' : 'badge-warning'}`}>{c.score}</span></td>
+                    <td>{c.orders}</td>
                   </tr>
-                )) : (
-                  <tr>
-                    <td colSpan="5" className="text-center py-10 text-muted">No recent activity found.</td>
-                  </tr>
-                )}
+                ))}
               </tbody>
             </table>
           </div>
