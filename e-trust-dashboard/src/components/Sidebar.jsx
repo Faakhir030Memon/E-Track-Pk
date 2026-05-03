@@ -1,15 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { 
+  FiGrid, 
+  FiShield, 
+  FiFileText, 
+  FiSettings, 
+  FiLogOut,
+  FiTrendingUp,
+  FiUsers,
+  FiHelpCircle,
+  FiActivity
+} from 'react-icons/fi';
 
 const Sidebar = () => {
   const { logout, user } = useAuth();
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-    )},
-    { name: 'Customer Check', path: '/check', icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
     )},
     { name: 'Orders Monitoring', path: '/orders', icon: (
