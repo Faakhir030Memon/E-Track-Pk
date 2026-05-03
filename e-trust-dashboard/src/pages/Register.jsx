@@ -6,6 +6,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     storeName: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
@@ -30,9 +31,10 @@ const Register = () => {
       await register({
         storeName: formData.storeName,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password
       });
-      navigate('/verify-otp'); // Directing to OTP as per image flow
+      navigate('/verify-otp', { state: { email: formData.email, phone: formData.phone } });
     } catch (err) {
       const serverError = err.response?.data?.error || 'Registration failed.';
       const debugInfo = err.response?.data?.debug ? ` (${err.response.data.debug})` : '';
@@ -84,6 +86,19 @@ const Register = () => {
               className="input"
               placeholder="seller@store.com"
               value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Phone Number</label>
+            <input
+              type="text"
+              name="phone"
+              className="input"
+              placeholder="0300 1234567"
+              value={formData.phone}
               onChange={handleChange}
               required
             />

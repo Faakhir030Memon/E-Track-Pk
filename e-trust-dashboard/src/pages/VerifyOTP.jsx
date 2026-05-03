@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const VerifyOTP = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email, phone } = location.state || { email: 'your email', phone: 'your number' };
 
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return false;
@@ -34,7 +36,7 @@ const VerifyOTP = () => {
 
         <h1 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Verify Your Account</h1>
         <p style={{ fontSize: '0.875rem', textAlign: 'center', marginBottom: '2rem' }}>
-          Enter the 6-digit code sent to<br /><strong>0300 1234567</strong>
+          Enter the 6-digit code sent to<br /><strong>{phone || email}</strong>
         </p>
 
         <form onSubmit={handleSubmit} className="w-full">
