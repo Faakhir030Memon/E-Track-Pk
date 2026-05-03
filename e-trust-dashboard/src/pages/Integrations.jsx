@@ -1,41 +1,101 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 
 const Integrations = () => {
-  const platforms = [
-    { name: 'Shopify', status: 'Connected', lastSync: '2 min ago', icon: '🛍️' },
-    { name: 'WooCommerce', status: 'Connected', lastSync: '5 min ago', icon: '🛒' },
-    { name: 'WhatsApp', status: 'Connected', lastSync: 'Sync enabled', icon: '💬' },
-    { name: 'TCS Courier', status: 'Connected', lastSync: '10 min ago', icon: '🚚' },
-    { name: 'Leopards Courier', status: 'Connected', lastSync: 'Active', icon: '📦' },
-    { name: 'Custom API', status: 'Connected', lastSync: 'View Docs', icon: '🔗' },
-  ];
+  const [apiKey] = useState('et_live_' + Math.random().toString(36).substring(7));
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(apiKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <DashboardLayout>
-      <div className="animate-slide-up">
+      <div className="animate-fade-in">
         <header className="mb-8">
-          <h1 style={{ fontSize: '1.5rem' }}>Integrations</h1>
-          <p style={{ fontSize: '0.875rem' }}>Connect your store and courier services for automated tracking</p>
+          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Store Integrations</h1>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Connect your e-commerce store to track orders and reduce returns in real-time.</p>
         </header>
 
-        <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-          {platforms.map((p, i) => (
-            <div key={i} className="card flex items-start gap-5">
-              <div style={{ fontSize: '2.5rem' }}>{p.icon}</div>
-              <div className="flex-grow flex-col gap-1">
-                <div className="flex-between">
-                  <h3 style={{ fontSize: '1rem' }}>{p.name}</h3>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--brand-primary)', fontWeight: 600 }}>{p.status}</span>
+        <div className="grid gap-8" style={{ gridTemplateColumns: '2fr 1fr' }}>
+          <div className="flex-col gap-6">
+            {/* API Key Card */}
+            <div className="card" style={{ background: '#fff', border: '1px solid #E2E8F0', padding: '2rem' }}>
+              <h3 style={{ color: '#1E293B', marginBottom: '1rem', fontSize: '1.1rem' }}>Your API Key</h3>
+              <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <code style={{ flexGrow: 1, color: '#0F172A', fontWeight: 600 }}>{apiKey}</code>
+                <button 
+                  onClick={copyToClipboard}
+                  className="btn btn-primary" 
+                  style={{ padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.75rem' }}
+                >
+                  {copied ? 'Copied!' : 'Copy Key'}
+                </button>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '1rem' }}>
+                Keep this key secret. Use it to authenticate your API requests for order tracking.
+              </p>
+            </div>
+
+            {/* Quick Start Guide */}
+            <div className="card" style={{ background: '#fff', border: '1px solid #E2E8F0', padding: '2rem' }}>
+              <h3 style={{ color: '#1E293B', marginBottom: '1.5rem', fontSize: '1.1rem' }}>How to Track Orders & Returns</h3>
+              <div className="flex-col gap-6">
+                <div className="flex gap-4">
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>1</div>
+                  <div>
+                    <h4 style={{ color: '#1E293B', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Send Order Data</h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B' }}>When a new order is placed, send the customer's phone number and order details to our /check-user API.</p>
+                  </div>
                 </div>
-                <p style={{ fontSize: '0.75rem', marginBottom: '1rem' }}>Last sync: {p.lastSync}</p>
-                <div className="flex gap-2">
-                  <button className="btn btn-outline" style={{ flex: 1, fontSize: '0.7rem', padding: '0.4rem' }}>{p.name === 'Custom API' ? 'Get API Key' : 'Disconnect'}</button>
-                  <button className="btn btn-ghost" style={{ flex: 1, fontSize: '0.7rem', padding: '0.4rem', background: 'var(--bg-elevated)' }}>Settings</button>
+                <div className="flex gap-4">
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>2</div>
+                  <div>
+                    <h4 style={{ color: '#1E293B', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Get Risk Score</h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B' }}>We return a trust score (0-100). If the score is low, flag the order as "High Risk" in your store admin.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, flexShrink: 0 }}>3</div>
+                  <div>
+                    <h4 style={{ color: '#1E293B', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Update Order Status</h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B' }}>Once the order is delivered or returned, update the status via our /update-status API to improve global accuracy.</p>
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="flex-col gap-6">
+            <div className="card" style={{ background: '#fff', border: '1px solid #E2E8F0', padding: '1.5rem' }}>
+              <h3 style={{ color: '#1E293B', marginBottom: '1.5rem', fontSize: '1rem' }}>Platform Plugins</h3>
+              <div className="flex-col gap-3">
+                <div className="flex items-center justify-between p-3 border border-slate-100 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div style={{ width: '32px', height: '32px', background: '#9575CD', borderRadius: '8px' }}></div>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Shopify</span>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', background: '#F1F5F9', padding: '2px 8px', borderRadius: '10px' }}>Coming Soon</span>
+                </div>
+                <div className="flex items-center justify-between p-3 border border-slate-100 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div style={{ width: '32px', height: '32px', background: '#5C6BC0', borderRadius: '8px' }}></div>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>WooCommerce</span>
+                  </div>
+                  <button className="btn btn-outline" style={{ fontSize: '0.7rem', padding: '4px 10px' }}>Download</button>
+                </div>
+                <div className="flex items-center justify-between p-3 border border-slate-100 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div style={{ width: '32px', height: '32px', background: '#EF5350', borderRadius: '8px' }}></div>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Custom API</span>
+                  </div>
+                  <button className="btn btn-outline" style={{ fontSize: '0.7rem', padding: '4px 10px' }}>Docs</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </DashboardLayout>
