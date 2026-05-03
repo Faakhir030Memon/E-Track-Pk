@@ -115,6 +115,7 @@ const login = async (req, res) => {
           storeId: store.storeId,
           platform: store.platform,
           stats: store.stats,
+          subscription: store.subscription,
         },
         token,
       },
