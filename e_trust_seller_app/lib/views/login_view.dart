@@ -18,23 +18,16 @@ class _LoginViewState extends State<LoginView> {
   bool _isLoading = false;
 
   Future<void> _login() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter credentials')));
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
-      final response = await http.post(
-        Uri.parse('${ApiService.baseUrl}/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': _emailController.text,
-          'password': _passwordController.text,
-        }),
-      );
+      final data = await ApiService.login(_emailController.text, _passwordController.text);
 
-      final data = jsonDecode(response.body);
       if (data['success'] == true) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_token', data['data']['token']);
-        await prefs.setString('user_data', jsonEncode(data['data']['store']));
-        
         if (mounted) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainScreen()));
         }
