@@ -55,6 +55,12 @@ const storeSchema = new mongoose.Schema({
     highRiskBlocked: { type: Number, default: 0 },
     moneySaved: { type: Number, default: 0 },
   },
+  subscription: {
+    status: { type: String, enum: ['active', 'inactive', 'trial', 'expired'], default: 'trial' },
+    plan: { type: String, enum: ['starter', 'growth', 'enterprise', 'free'], default: 'free' },
+    expiryDate: { type: Date },
+    lastPaymentDate: { type: Date },
+  },
 }, {
   timestamps: true,
 });
