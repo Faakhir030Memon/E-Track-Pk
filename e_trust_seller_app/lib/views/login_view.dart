@@ -4,10 +4,10 @@ import 'main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../theme/app_theme.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
-
   @override
   State<LoginView> createState() => _LoginViewState();
 }
@@ -40,12 +40,18 @@ class _LoginViewState extends State<LoginView> {
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['error'] ?? 'Login failed')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: AppTheme.danger,
+            content: Text(data['error'] ?? 'Login failed')
+          ));
         }
       }
     } catch (e) {
        if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Network error. Check backend connection.')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: AppTheme.danger,
+          content: Text('Network error. Check backend connection.')
+        ));
       }
     } finally {
       setState(() => _isLoading = false);
@@ -55,20 +61,35 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.background,
       body: Padding(
         padding: const EdgeInsets.all(30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(15)),
-              child: const Center(child: Text("E", style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold))),
+            // Logo Integration
+            Image.asset(
+              'assets/images/logo.png',
+              height: 100,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Center(child: Text("ET", style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold))),
+              ),
             ),
-            const SizedBox(height: 20),
-            const Text("E-Trust PK", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const Text("Seller Mobile Portal", style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 24),
+            Text(
+              "E-Trust PK", 
+              style: AppTheme.headingStyle.copyWith(fontSize: 28),
+            ),
+            const Text(
+              "Seller Mobile Portal", 
+              style: TextStyle(color: AppTheme.textSecondary),
+            ),
             const SizedBox(height: 50),
             TextField(
               controller: _emailController,
