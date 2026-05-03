@@ -36,7 +36,7 @@ const Register = () => {
       });
       navigate('/verify-otp', { state: { email: formData.email, phone: formData.phone } });
     } catch (err) {
-      const serverError = err.response?.data?.error || 'Registration failed.';
+      const serverError = err.response?.data?.error || err.response?.data?.errors?.[0]?.message || 'Registration failed.';
       const debugInfo = err.response?.data?.debug ? ` (${err.response.data.debug})` : '';
       setError(`${serverError}${debugInfo}`);
     } finally {
