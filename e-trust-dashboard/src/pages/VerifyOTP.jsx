@@ -28,7 +28,9 @@ const VerifyOTP = () => {
     <div className="auth-wrapper">
       <div className="auth-card animate-slide-up flex-col items-center">
         <div className="flex items-center gap-3 mb-8">
-          <img src="/logo.png" alt="Logo" style={{ height: '48px', objectFit: 'contain' }} />
+          <div style={{ background: '#fff', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+            <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
+          </div>
           <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
         </div>
 

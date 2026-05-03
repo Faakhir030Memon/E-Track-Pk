@@ -36,7 +36,9 @@ const Sidebar = () => {
   return (
     <aside className="sidebar animate-fade-in">
       <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-        <img src="/logo.png" alt="E-Trust PK" style={{ height: '36px', objectFit: 'contain' }} />
+        <div style={{ background: '#fff', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src="/logo.png" alt="E-Trust PK" style={{ height: '32px', objectFit: 'contain' }} />
+        </div>
         <h2 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
           E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span>
         </h2>
