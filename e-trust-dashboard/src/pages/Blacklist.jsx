@@ -1,109 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
-import api from '../utils/api';
 
 const Blacklist = () => {
-  const [blacklist, setBlacklist] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [pagination, setPagination] = useState({});
-
-  useEffect(() => {
-    fetchBlacklist();
-  }, []);
-
-  const fetchBlacklist = async (page = 1) => {
-    setIsLoading(true);
-    try {
-      const res = await api.get(`/trust/blacklist?page=${page}`);
-      setBlacklist(res.data.data.users);
-      setPagination(res.data.data.pagination);
-    } catch (err) {
-      console.error('Error fetching blacklist:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const blacklistedUsers = [
+    { id: '5e884898...', reason: 'Fake Address', reportedBy: 'Store_123', date: '06 May 2026' },
+    { id: 'b1946ac9...', reason: 'Refused Delivery', reportedBy: 'Store_456', date: '05 May 2026' },
+    { id: 'c81e72bd...', reason: 'No Pick Up', reportedBy: 'Store_789', date: '05 May 2026' },
+    { id: 'a8171187...', reason: 'Fraudulent Order', reportedBy: 'Store_101', date: '04 May 2026' },
+    { id: 'e4d3b71...', reason: 'Fake Address', reportedBy: 'Store_202', date: '04 May 2026' },
+  ];
 
   return (
     <DashboardLayout>
-      <div className="animate-fade-in">
+      <div className="animate-slide-up">
         <header className="mb-8">
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Global Blacklist</h1>
-          <p>Verified high-risk users reported by multiple stores across the network.</p>
+          <h1 style={{ fontSize: '1.5rem' }}>Reports / Blacklist</h1>
+          <p style={{ fontSize: '0.875rem' }}>Global shared records of verified high-risk customers</p>
         </header>
 
         <div className="card" style={{ padding: 0 }}>
-          <div className="overflow-hidden">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>User Hash ID</th>
-                  <th>Global Score</th>
-                  <th>Reports</th>
-                  <th>Main Reason</th>
-                  <th>Last Seen</th>
+          <div className="px-6 py-4 flex gap-6 border-bottom" style={{ borderBottom: '1px solid var(--border)' }}>
+            <button className="btn btn-ghost" style={{ background: 'var(--bg-elevated)', color: 'var(--brand-primary)', fontSize: '0.875rem' }}>Blacklisted Users</button>
+            <button className="btn btn-ghost" style={{ fontSize: '0.875rem' }}>Reports</button>
+          </div>
+
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Hashed ID</th>
+                <th>Reason</th>
+                <th>Reported By</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blacklistedUsers.map((user, i) => (
+                <tr key={i}>
+                  <td className="mono" style={{ color: 'var(--brand-primary)' }}>{user.id}</td>
+                  <td>{user.reason}</td>
+                  <td>{user.reportedBy}</td>
+                  <td>{user.date}</td>
+                  <td>
+                    <button className="btn btn-primary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}>View</button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <tr>
-                    <td colSpan="5" className="text-center py-20">
-                      <div className="spinner" style={{ margin: '0 auto' }}></div>
-                    </td>
-                  </tr>
-                ) : blacklist.length > 0 ? (
-                  blacklist.map((user) => (
-                    <tr key={user._id}>
-                      <td className="mono" style={{ fontSize: '0.8rem' }}>
-                        <span style={{ color: 'var(--brand-primary)' }}>{user.hashedId.substring(0, 16)}...</span>
-                      </td>
-                      <td>
-                        <span className="badge badge-red" style={{ fontWeight: 700 }}>{user.globalScore}</span>
-                      </td>
-                      <td>
-                        <span className="badge badge-yellow">{user.reportedByStores.length} Stores</span>
-                      </td>
-                      <td>
-                        {user.flags[0] ? (
-                          <span className="badge badge-ghost" style={{ border: '1px solid var(--border)' }}>
-                            {user.flags[0].toUpperCase().replace('_', ' ')}
-                          </span>
-                        ) : 'RTO ABUSE'}
-                      </td>
-                      <td>{new Date(user.lastActivity).toLocaleDateString()}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="text-center py-20 text-muted">No blacklisted users found yet.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              ))}
+            </tbody>
+          </table>
 
-        {pagination.pages > 1 && (
-          <div className="flex justify-center mt-6 gap-2">
-            {Array.from({ length: pagination.pages }, (_, i) => i + 1).map(p => (
-              <button 
-                key={p} 
-                className={`btn ${p === pagination.page ? 'btn-primary' : 'btn-ghost'}`}
-                style={{ padding: '0.5rem 1rem' }}
-                onClick={() => fetchBlacklist(p)}
-              >
-                {p}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="card mt-8" style={{ borderStyle: 'dashed', background: 'transparent' }}>
-          <div className="flex items-center gap-4">
-            <div style={{ fontSize: '1.5rem' }}>🛡️</div>
-            <p style={{ fontSize: '0.85rem' }}>
-              <strong>How it works:</strong> Users only appear on this global blacklist if they have a trust score below 30 <strong>and</strong> have been reported by at least 2 different stores. This prevents false positives and ensures the highest level of accuracy.
-            </p>
+          <div className="flex-center py-6">
+            <button className="btn btn-outline" style={{ padding: '0.5rem 2rem', fontSize: '0.8125rem' }}>Export Report</button>
           </div>
         </div>
       </div>
