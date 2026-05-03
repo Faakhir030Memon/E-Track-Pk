@@ -30,7 +30,9 @@ const Login = () => {
       <div className="auth-card animate-slide-up">
         <div className="flex-col items-center mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <img src="/logo.png" alt="Logo" style={{ height: '48px', objectFit: 'contain' }} />
+            <div style={{ background: '#fff', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
+            </div>
             <h2 style={{ margin: 0, fontSize: '1.125rem' }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
           </div>
           <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Welcome Back</h1>
