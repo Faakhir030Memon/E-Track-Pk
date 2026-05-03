@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Store = require('../models/Store');
 const { generateApiKey, generateStoreId } = require('../utils/hashEngine');
+const NotificationService = require('../services/notificationService');
 
 /**
  * Register a new store
@@ -28,6 +29,12 @@ const register = async (req, res) => {
       apiKey: generateApiKey(),
       platform: platform || 'custom',
     });
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Send via SMS and WhatsApp
+    await NotificationService.sendOTP(phone || email, otp);
 
     // Generate JWT
     const token = jwt.sign(
