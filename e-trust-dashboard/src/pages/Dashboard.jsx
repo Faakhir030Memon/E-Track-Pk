@@ -41,13 +41,13 @@ const Dashboard = () => {
   }
 
   const statCards = [
-    { label: 'Total Orders', value: analytics?.summary?.totalOrders || '0', trend: '+12.5%', isUp: true },
-    { label: 'High Risk', value: analytics?.summary?.highRiskCount || '0', trend: '+2.4%', isUp: false },
-    { label: 'Avg Trust Score', value: analytics?.summary?.avgTrustScore?.toFixed(1) || '85.2', trend: '+5.1%', isUp: true },
-    { label: 'Saved Revenue', value: `PKR ${((analytics?.summary?.highRiskCount || 0) * 1200).toLocaleString()}`, trend: '+15.3%', isUp: true },
+    { label: 'Total Lookups', value: analytics?.summary?.totalOrders || '0', trend: '+12.5%', isUp: true, icon: '🔍', color: '#3B82F6' },
+    { label: 'High Risk Flagged', value: analytics?.summary?.highRiskCount || '0', trend: '+2.4%', isUp: false, icon: '⚠️', color: '#FF4B4B' },
+    { label: 'Avg Trust Score', value: analytics?.summary?.avgTrustScore?.toFixed(1) || '85.2', trend: '+5.1%', isUp: true, icon: '⭐', color: '#10B981' },
+    { label: 'Revenue Protected', value: `PKR ${((analytics?.summary?.highRiskCount || 0) * 1200).toLocaleString()}`, trend: '+15.3%', isUp: true, icon: '🛡️', color: '#FBBF24' },
   ];
 
-  const COLORS = ['#EF4444', '#F59E0B', '#10B981'];
+  const COLORS = ['#FF4B4B', '#FBBF24', '#10B981'];
   const pieData = [
     { name: 'High Risk', value: analytics?.summary?.highRiskCount || 10 },
     { name: 'Risky', value: 20 },
@@ -57,34 +57,33 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="animate-fade-in">
-        <header className="flex-between mb-8">
+        <header className="flex-between mb-10">
           <div>
-            <h1 style={{ fontSize: '1.5rem' }}>Welcome back, {user?.storeName || 'Store'} 👋</h1>
-            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>Monitoring fraud for {user?.platform || 'your'} store</p>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.03em' }}>Hello, {user?.storeName || 'Store'}!</h1>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Here's what's happening with your fraud monitoring today.</p>
           </div>
-          <div className="flex gap-3">
-            <button className="btn btn-outline" style={{ padding: '0.5rem' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            </button>
-            <div className="flex items-center gap-2 px-3 py-1 bg-card rounded-md border border-border">
-              <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#374151' }}></div>
-              <span style={{ fontSize: '0.8125rem', fontWeight: 500 }}>Ali Store</span>
+          <div className="flex gap-4">
+            <div className="flex flex-col items-end">
+              <span className="badge badge-success">Live Protection Active</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px' }}>Last updated: Just now</span>
             </div>
           </div>
         </header>
 
         {/* Top Stats Grid */}
-        <div className="grid-4 mb-8">
+        <div className="grid-4 mb-10">
           {statCards.map((stat, i) => (
-            <div key={i} className="card stat-card">
-              <span className="stat-label">{stat.label}</span>
+            <div key={i} className="card stat-card" style={{ borderLeft: `4px solid ${stat.color}` }}>
+              <div className="flex-between mb-2">
+                <span className="stat-label">{stat.label}</span>
+                <span style={{ fontSize: '1.25rem' }}>{stat.icon}</span>
+              </div>
               <div className="flex items-baseline gap-2">
                 <span className="stat-value">{stat.value}</span>
-                <span className={`stat-trend ${stat.isUp ? 'trend-up' : 'trend-down'}`}>
+                <span className={`stat-trend ${stat.isUp ? 'trend-up' : 'trend-down'}`} style={{ fontSize: '0.7rem' }}>
                   {stat.isUp ? '↑' : '↓'} {stat.trend}
                 </span>
               </div>
-              <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>vs last 7 days</p>
             </div>
           ))}
         </div>
