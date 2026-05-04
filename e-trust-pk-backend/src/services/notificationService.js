@@ -20,6 +20,16 @@ class NotificationService {
       ╚══════════════════════════════════════════════════╝
     `);
 
+    // ── Development Helper: Write to local file ─────────────────────
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const otpPath = path.join(process.cwd(), 'LATEST_OTP.txt');
+      fs.writeFileSync(otpPath, `Latest OTP for ${phone}: ${otp}\nSent at: ${new Date().toLocaleString()}`);
+    } catch (err) {
+      // Ignore fs errors in production
+    }
+
     // ── Twilio Integration (Uncomment to enable real SMS) ───────────
     /*
     const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
