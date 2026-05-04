@@ -34,6 +34,28 @@ const authenticate = async (req, res, next) => {
       });
     }
 
+    // Auto-expiry check
+    if (store.role === 'store' && store.subscription?.expiryDate && new Date(store.subscription.expiryDate) < new Date()) {
+      if (store.subscription.status !== 'expired') {
+        store.subscription.status = 'expired';
+        await store.save();
+      }
+      return res.status(403).json({
+        success: false,
+        error: 'Your subscription has expired. Please renew to continue.',
+      });
+    }
+
+    // Approval check (allow profile and pricing routes)
+    const allowedPaths = ['/api/v1/auth/me', '/api/v1/auth/submit-payment'];
+    if (store.role === 'store' && !store.isApproved && !allowedPaths.includes(req.originalUrl)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Account pending approval.',
+        status: 'pending_approval'
+      });
+    }
+
     req.store = store;
     next();
   } catch (error) {
