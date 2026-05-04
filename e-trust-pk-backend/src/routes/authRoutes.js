@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword, verify2FA } = require('../controllers/authController');
+const { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword, verify2FA, toggle2FA } = require('../controllers/authController');
 const { authenticate } = require('../middlewares/auth');
 const { validateRegister, validateLogin } = require('../middlewares/validators');
 
@@ -16,5 +16,6 @@ router.post('/verify-2fa', verify2FA);
 router.get('/me', authenticate, getMe);
 router.post('/regenerate-key', authenticate, regenerateApiKey);
 router.post('/submit-payment', authenticate, submitPayment);
+router.post('/toggle-2fa', authenticate, toggle2FA);
 
 module.exports = router;
