@@ -170,4 +170,90 @@ const submitPayment = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getMe, regenerateApiKey, submitPayment };
+/**
+ * Forgot Password - Step 1: Get Security Question
+ * POST /api/v1/auth/forgot-password
+ */
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const store = await Store.findOne({ email });
+    
+    if (!store) {
+      return res.status(404).json({ success: false, error: 'Store not found.' });
+    }
+
+    if (!store.securityQuestion?.question) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'No security question set for this account. Please contact support.' 
+      });
+    }
+
+    res.json({
+      success: true,
+      data: { question: store.securityQuestion.question }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error.' });
+  }
+};
+
+/**
+ * Forgot Password - Step 2: Verify Answer
+ * POST /api/v1/auth/verify-security-answer
+ */
+const verifySecurityAnswer = async (req, res) => {
+  try {
+    const { email, answer } = req.body;
+    const store = await Store.findOne({ email });
+
+    if (!store || store.securityQuestion.answer !== answer) {
+      return res.status(401).json({ success: false, error: 'Incorrect answer.' });
+    }
+
+    // Generate a short-lived reset token
+    const resetToken = jwt.sign(
+      { id: store._id, purpose: 'reset_password' },
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    res.json({
+      success: true,
+      data: { resetToken }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error.' });
+  }
+};
+
+/**
+ * Forgot Password - Step 3: Reset Password
+ * POST /api/v1/auth/reset-password
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body;
+    const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+
+    if (decoded.purpose !== 'reset_password') {
+      return res.status(401).json({ success: false, error: 'Invalid reset token.' });
+    }
+
+    const store = await Store.findById(decoded.id);
+    if (!store) return res.status(404).json({ success: false, error: 'Store not found.' });
+
+    store.password = newPassword;
+    await store.save();
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully. You can now login.',
+    });
+  } catch (error) {
+    res.status(401).json({ success: false, error: 'Invalid or expired token.' });
+  }
+};
+
+module.exports = { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword };
