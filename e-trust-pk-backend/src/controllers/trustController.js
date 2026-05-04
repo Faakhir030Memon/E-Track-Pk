@@ -260,10 +260,13 @@ const getAnalytics = async (req, res) => {
  */
 const getActivityFeed = async (req, res) => {
   try {
-    const storeId = req.store.storeId;
-    const limit = parseInt(req.query.limit) || 20;
+    const limit = parseInt(req.query.limit) || 10;
 
-    const activities = await OrderActivity.find({ storeId })
+    // Return global recent "risky" activities for the feed
+    // This makes the dashboard feel alive with real platform data
+    const activities = await OrderActivity.find({
+      status: { $in: ['returned', 'refused', 'fake_address', 'no_pick_up'] }
+    })
       .sort({ createdAt: -1 })
       .limit(limit);
 
