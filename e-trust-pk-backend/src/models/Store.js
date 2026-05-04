@@ -42,6 +42,15 @@ const storeSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  role: {
+    type: String,
+    enum: ['store', 'admin'],
+    default: 'store',
+  },
+  isApproved: {
+    type: Boolean,
+    default: false,
+  },
   isVerified: {
     type: Boolean,
     default: false,
@@ -56,10 +65,15 @@ const storeSchema = new mongoose.Schema({
     moneySaved: { type: Number, default: 0 },
   },
   subscription: {
-    status: { type: String, enum: ['active', 'inactive', 'trial', 'expired'], default: 'trial' },
+    status: { type: String, enum: ['active', 'inactive', 'trial', 'expired', 'pending_approval'], default: 'trial' },
     plan: { type: String, enum: ['starter', 'growth', 'enterprise', 'free'], default: 'free' },
     expiryDate: { type: Date },
     lastPaymentDate: { type: Date },
+    paymentDetails: {
+      transactionId: { type: String },
+      screenshotUrl: { type: String },
+      submittedAt: { type: Date },
+    },
   },
 }, {
   timestamps: true,

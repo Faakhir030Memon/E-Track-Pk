@@ -83,4 +83,14 @@ const authenticateApiKey = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticate, authenticateApiKey };
+const authorizeAdmin = (req, res, next) => {
+  if (req.store.role !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied. Admin role required.',
+    });
+  }
+  next();
+};
+
+module.exports = { authenticate, authenticateApiKey, authorizeAdmin };

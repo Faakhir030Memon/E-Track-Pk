@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
+import api from '../utils/api';
 
 const Pricing = () => {
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [transactionId, setTransactionId] = useState('');
+  const [screenshotUrl, setScreenshotUrl] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
+
   const plans = [
     {
+      id: 'starter',
       name: 'Starter Plan',
-      price: '5,000',
+      price: '1,500',
       period: 'month',
       description: 'Ideal for small Instagram & Facebook stores.',
       features: [
@@ -14,12 +22,13 @@ const Pricing = () => {
         'Email Alerts',
         'Single Store Integration'
       ],
-      buttonText: 'Subscribe Starter',
+      buttonText: 'Select Starter',
       isPopular: false
     },
     {
+      id: 'growth',
       name: 'Growth Plan',
-      price: '15,000',
+      price: '4,500',
       period: 'month',
       description: 'Best for established Shopify & WooCommerce stores.',
       features: [
@@ -29,13 +38,14 @@ const Pricing = () => {
         'Priority Support',
         'Custom Webhooks'
       ],
-      buttonText: 'Get Started',
+      buttonText: 'Select Growth',
       isPopular: true
     },
     {
+      id: 'enterprise',
       name: 'Enterprise',
-      price: 'Custom',
-      period: 'quote',
+      price: '12,000',
+      period: 'month',
       description: 'For large platforms like Daraz or Multi-vendor sites.',
       features: [
         'Dedicated Fraud Engine',
@@ -44,80 +54,146 @@ const Pricing = () => {
         '24/7 Account Manager',
         'On-premise Deployment'
       ],
-      buttonText: 'Contact Sales',
+      buttonText: 'Select Enterprise',
       isPopular: false
     }
   ];
+
+  const handleSubmitPayment = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await api.post('/auth/submit-payment', {
+        plan: selectedPlan.id,
+        transactionId,
+        screenshotUrl,
+      });
+      setMessage('Payment submitted successfully! Admin will approve your account shortly.');
+      setSelectedPlan(null);
+    } catch (err) {
+      setMessage(err.response?.data?.error || 'Failed to submit payment.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <DashboardLayout>
       <div className="animate-fade-in">
         <header className="mb-10 text-center">
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Simple, Transparent Pricing</h1>
-          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>Choose the plan that best fits your store's scale.</p>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>E-Trust PK Membership</h1>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>Affordable protection for Pakistani E-commerce stores.</p>
         </header>
 
-        <div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-          {plans.map((plan, i) => (
-            <div 
-              key={i} 
-              className={`card ${plan.isPopular ? 'border-primary' : ''}`} 
-              style={{ 
-                padding: '2.5rem', 
-                display: 'flex', 
-                flexDirection: 'column',
-                background: '#fff',
-                color: '#1E293B',
-                border: plan.isPopular ? '2px solid var(--brand-primary)' : '1px solid #E2E8F0',
-                position: 'relative'
-              }}
-            >
-              {plan.isPopular && (
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '12px', 
-                  right: '12px', 
-                  background: 'var(--brand-primary)', 
-                  color: '#fff', 
-                  padding: '4px 12px', 
-                  borderRadius: '20px', 
-                  fontSize: '0.75rem', 
-                  fontWeight: 700 
-                }}>
-                  MOST POPULAR
-                </div>
-              )}
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{plan.name}</h3>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', marginBottom: '1.5rem' }}>{plan.description}</p>
-              
-              <div className="flex items-baseline gap-1 mb-8">
-                <span style={{ fontSize: '2rem', fontWeight: 800 }}>Rs {plan.price}</span>
-                <span style={{ fontSize: '0.875rem', color: '#64748B' }}>/{plan.period}</span>
-              </div>
+        {message && (
+          <div className={`card mb-8 ${message.includes('successfully') ? 'badge-success' : 'badge-danger'}`} style={{ textAlign: 'center', padding: '1rem' }}>
+            {message}
+          </div>
+        )}
 
-              <div className="flex-col gap-4 mb-8" style={{ flexGrow: 1 }}>
-                {plan.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span style={{ fontSize: '0.875rem' }}>{feature}</span>
+        {!selectedPlan ? (
+          <div className="grid-4">
+            {plans.map((plan, i) => (
+              <div 
+                key={i} 
+                className="card" 
+                style={{ 
+                  padding: '2rem', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  background: 'var(--bg-card)',
+                  border: plan.isPopular ? '2px solid var(--brand-primary)' : '1px solid var(--border)',
+                  position: 'relative'
+                }}
+              >
+                {plan.isPopular && (
+                  <div style={{ 
+                    position: 'absolute', top: '12px', right: '12px', 
+                    background: 'var(--brand-primary)', color: '#fff', 
+                    padding: '4px 12px', borderRadius: '20px', 
+                    fontSize: '0.7rem', fontWeight: 700 
+                  }}>
+                    MOST POPULAR
                   </div>
-                ))}
+                )}
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{plan.name}</h3>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>{plan.description}</p>
+                
+                <div className="flex items-baseline gap-1 mb-8">
+                  <span style={{ fontSize: '2rem', fontWeight: 800 }}>Rs {plan.price}</span>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>/{plan.period}</span>
+                </div>
+
+                <div className="flex flex-col gap-3 mb-8" style={{ flexGrow: 1 }}>
+                  {plan.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button 
+                  className={`btn ${plan.isPopular ? 'btn-primary' : 'btn-outline'} w-full`}
+                  onClick={() => setSelectedPlan(plan)}
+                >
+                  {plan.buttonText}
+                </button>
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="card max-w-2xl mx-auto" style={{ padding: '2.5rem' }}>
+            <button className="btn btn-ghost mb-6" onClick={() => setSelectedPlan(null)}>← Back to Plans</button>
+            <h2 style={{ marginBottom: '1rem' }}>Submit Payment for {selectedPlan.name}</h2>
+            <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
+              Please transfer <strong>Rs {selectedPlan.price}</strong> to our bank account/JazzCash and provide the details below.
+              <br /><br />
+              <strong>Bank:</strong> Meezan Bank<br />
+              <strong>Account:</strong> 1234-5678-9012<br />
+              <strong>Title:</strong> E-Trust PK Solutions
+            </p>
 
-              <button className={`btn ${plan.isPopular ? 'btn-primary' : 'btn-outline'} w-full py-3`} style={{ borderRadius: '12px' }}>
-                {plan.buttonText}
+            <form onSubmit={handleSubmitPayment} className="flex flex-col gap-6">
+              <div className="input-group">
+                <label className="input-label">Transaction ID / Reference Number</label>
+                <input 
+                  className="input" 
+                  required 
+                  placeholder="e.g. 123456789" 
+                  value={transactionId}
+                  onChange={(e) => setTransactionId(e.target.value)}
+                />
+              </div>
+              <div className="input-group">
+                <label className="input-label">Payment Screenshot URL (Imgur/Drive)</label>
+                <input 
+                  className="input" 
+                  required 
+                  placeholder="https://imgur.com/..." 
+                  value={screenshotUrl}
+                  onChange={(e) => setScreenshotUrl(e.target.value)}
+                />
+              </div>
+              <button className="btn btn-primary w-full py-3" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Confirm Payment Submission'}
               </button>
-            </div>
-          ))}
-        </div>
+            </form>
+          </div>
+        )}
 
-        <div className="mt-12 p-8 rounded-2xl bg-white border border-slate-200 text-center">
-          <h4 style={{ color: '#1E293B', marginBottom: '0.5rem' }}>Special Offer: Start with 1 Month Free Trial</h4>
-          <p style={{ color: '#64748B', fontSize: '0.875rem' }}>"Only pay if your return percentage improves." No credit card required to start.</p>
+        <div className="mt-12 p-8 rounded-2xl bg-card border border-border text-center">
+          <h4 style={{ marginBottom: '0.5rem' }}>Payment Verification Policy</h4>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
+            Verification usually takes 2-4 hours. Once approved, your API access and dashboard will be fully activated.
+          </p>
         </div>
       </div>
     </DashboardLayout>
   );
 };
+
+export default Pricing;
+
 
 export default Pricing;

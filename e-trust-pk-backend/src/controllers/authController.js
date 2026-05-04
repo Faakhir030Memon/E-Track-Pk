@@ -143,20 +143,31 @@ const getMe = async (req, res) => {
 };
 
 /**
- * Regenerate API key
- * POST /api/v1/auth/regenerate-key
+ * Submit payment for subscription
+ * POST /api/v1/auth/submit-payment
  */
-const regenerateApiKey = async (req, res) => {
+const submitPayment = async (req, res) => {
   try {
-    const newKey = generateApiKey();
-    await Store.findByIdAndUpdate(req.store._id, { apiKey: newKey });
+    const { plan, transactionId, screenshotUrl } = req.body;
+
+    await Store.findByIdAndUpdate(req.store._id, {
+      'subscription.status': 'pending_approval',
+      'subscription.plan': plan,
+      'subscription.paymentDetails': {
+        transactionId,
+        screenshotUrl,
+        submittedAt: new Date(),
+      }
+    });
+
     res.json({
       success: true,
-      data: { apiKey: newKey },
+      message: 'Payment submitted for approval.',
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Server error.' });
+    console.error('Submit payment error:', error);
+    res.status(500).json({ success: false, error: 'Server error during payment submission.' });
   }
 };
 
-module.exports = { register, login, getMe, regenerateApiKey };
+module.exports = { register, login, getMe, regenerateApiKey, submitPayment };
