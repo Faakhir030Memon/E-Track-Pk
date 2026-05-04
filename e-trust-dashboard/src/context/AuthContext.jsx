@@ -21,9 +21,20 @@ export const AuthProvider = ({ children }) => {
       }
       setLoading(false);
     };
-
     checkUser();
   }, []);
+
+  const refreshUser = async () => {
+    const token = localStorage.getItem('etpk_token');
+    if (token) {
+      try {
+        const res = await api.get('/auth/me');
+        setUser(res.data.data);
+      } catch (err) {
+        console.error('Refresh user failed:', err);
+      }
+    }
+  };
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
@@ -59,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, verify2FA, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, verify2FA, register, logout, refreshUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
