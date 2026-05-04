@@ -7,7 +7,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const [otp, setOtp] = useState('');
+  const [require2FA, setRequire2FA] = useState(false);
+  const [partialToken, setPartialToken] = useState('');
+  const { login, verify2FA } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -16,10 +19,20 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-      navigate('/');
+      if (require2FA) {
+        await verify2FA(partialToken, otp);
+        navigate('/');
+      } else {
+        const data = await login(email, password);
+        if (data.require2FA) {
+          setRequire2FA(true);
+          setPartialToken(data.partialToken);
+        } else {
+          navigate('/');
+        }
+      }
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
+      setError(err.response?.data?.error || 'Authentication failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }
@@ -51,35 +64,59 @@ const Login = () => {
         )}
 
         <form className="flex-col gap-5" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label className="input-label">Email / Store ID</label>
-            <input
-              type="email"
-              className="input"
-              placeholder="enter@store.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          {!require2FA ? (
+            <>
+              <div className="input-group">
+                <label className="input-label">Email / Store ID</label>
+                <input
+                  type="email"
+                  className="input"
+                  placeholder="enter@store.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div className="input-group">
-            <div className="flex-between">
-              <label className="input-label">Password</label>
-              <a href="#" style={{ fontSize: '0.75rem', fontWeight: 500 }}>Forgot Password?</a>
+              <div className="input-group">
+                <div className="flex-between">
+                  <label className="input-label">Password</label>
+                  <Link to="/forgot-password" style={{ fontSize: '0.75rem', fontWeight: 500 }}>Forgot Password?</Link>
+                </div>
+                <input
+                  type="password"
+                  className="input"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <div className="input-group animate-fade-in">
+              <label className="input-label">Enter 6-Digit Verification Code</label>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                A verification code has been sent to your registered device.
+              </p>
+              <input
+                type="text"
+                className="input text-center"
+                placeholder="000000"
+                maxLength="6"
+                style={{ letterSpacing: '0.5rem', fontSize: '1.25rem', fontWeight: 700 }}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+              />
+              <button type="button" className="btn btn-ghost mt-2 w-full" style={{ fontSize: '0.75rem' }} onClick={() => setRequire2FA(false)}>
+                ← Back to Login
+              </button>
             </div>
-            <input
-              type="password"
-              className="input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          )}
 
           <button type="submit" className="btn btn-primary w-full py-3" disabled={isLoading}>
-            {isLoading ? <div className="spinner"></div> : 'Login'}
+            {isLoading ? <div className="spinner"></div> : (require2FA ? 'Verify OTP' : 'Login')}
           </button>
         </form>
 
