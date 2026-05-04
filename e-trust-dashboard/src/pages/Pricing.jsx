@@ -79,63 +79,71 @@ const Pricing = () => {
 
   return (
     <DashboardLayout>
-      <div className="animate-fade-in">
-        <header className="mb-10 text-center">
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>E-Trust PK Membership</h1>
-          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>Affordable protection for Pakistani E-commerce stores.</p>
+      <div className="animate-slide-up" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <header className="mb-12 text-center">
+          <span className="badge badge-success mb-3">Subscription Plans</span>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.04em', marginBottom: '1rem' }}>Protect Your Store Today</h1>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>Transparent pricing designed to scale with your business in Pakistan.</p>
         </header>
 
         {message && (
-          <div className={`card mb-8 ${message.includes('successfully') ? 'badge-success' : 'badge-danger'}`} style={{ textAlign: 'center', padding: '1rem' }}>
+          <div className="card mb-8" style={{ background: message.includes('successfully') ? 'var(--success-bg)' : 'var(--danger-bg)', borderColor: message.includes('successfully') ? 'var(--success)' : 'var(--danger)', textAlign: 'center', padding: '1rem', color: message.includes('successfully') ? 'var(--success)' : 'var(--danger)', fontWeight: 600 }}>
             {message}
           </div>
         )}
 
         {!selectedPlan ? (
-          <div className="grid-4">
+          <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
             {plans.map((plan, i) => (
               <div 
                 key={i} 
                 className="card" 
                 style={{ 
-                  padding: '2rem', 
+                  padding: '2.5rem', 
                   display: 'flex', 
                   flexDirection: 'column',
-                  background: 'var(--bg-card)',
+                  background: '#FFFFFF',
                   border: plan.isPopular ? '2px solid var(--brand-primary)' : '1px solid var(--border)',
-                  position: 'relative'
+                  position: 'relative',
+                  transform: plan.isPopular ? 'scale(1.05)' : 'none',
+                  zIndex: plan.isPopular ? 1 : 0
                 }}
               >
                 {plan.isPopular && (
                   <div style={{ 
-                    position: 'absolute', top: '12px', right: '12px', 
+                    position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)',
                     background: 'var(--brand-primary)', color: '#fff', 
-                    padding: '4px 12px', borderRadius: '20px', 
-                    fontSize: '0.7rem', fontWeight: 700 
+                    padding: '4px 14px', borderRadius: '20px', 
+                    fontSize: '0.75rem', fontWeight: 700,
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
                   }}>
                     MOST POPULAR
                   </div>
                 )}
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{plan.name}</h3>
-                <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>{plan.description}</p>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>{plan.name}</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>{plan.description}</p>
                 
                 <div className="flex items-baseline gap-1 mb-8">
-                  <span style={{ fontSize: '2rem', fontWeight: 800 }}>Rs {plan.price}</span>
-                  <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>/{plan.period}</span>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Rs</span>
+                  <span style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.02em' }}>{plan.price}</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>/{plan.period}</span>
                 </div>
 
-                <div className="flex flex-col gap-3 mb-8" style={{ flexGrow: 1 }}>
+                <div className="flex flex-col gap-4 mb-10" style={{ flexGrow: 1 }}>
                   {plan.features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-3">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>{feature}</span>
+                      <div style={{ background: 'var(--success-bg)', padding: '4px', borderRadius: '50%', display: 'flex' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="4"><polyline points="20 6 9 17 4 12"/></svg>
+                      </div>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 <button 
-                  className={`btn ${plan.isPopular ? 'btn-primary' : 'btn-outline'} w-full`}
+                  className={`btn ${plan.isPopular ? 'btn-primary' : 'btn-outline'} w-full py-4`}
                   onClick={() => setSelectedPlan(plan)}
+                  style={{ fontSize: '0.9375rem' }}
                 >
                   {plan.buttonText}
                 </button>
@@ -143,16 +151,38 @@ const Pricing = () => {
             ))}
           </div>
         ) : (
-          <div className="card max-w-2xl mx-auto" style={{ padding: '2.5rem' }}>
-            <button className="btn btn-ghost mb-6" onClick={() => setSelectedPlan(null)}>← Back to Plans</button>
-            <h2 style={{ marginBottom: '1rem' }}>Submit Payment for {selectedPlan.name}</h2>
-            <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-              Please transfer <strong>Rs {selectedPlan.price}</strong> to our bank account/JazzCash and provide the details below.
-              <br /><br />
-              <strong>Bank:</strong> Meezan Bank<br />
-              <strong>Account:</strong> 1234-5678-9012<br />
-              <strong>Title:</strong> E-Trust PK Solutions
-            </p>
+          <div className="card animate-slide-up" style={{ padding: '3rem', maxWidth: '600px', margin: '0 auto' }}>
+            <button className="btn btn-ghost mb-8" onClick={() => setSelectedPlan(null)} style={{ padding: 0 }}>
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+               Back to Plans
+            </button>
+            
+            <div className="mb-8">
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Subscription for {selectedPlan.name}</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Follow the steps below to activate your account.</p>
+            </div>
+
+            <div style={{ background: 'var(--bg-main)', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', marginBottom: '2rem' }}>
+              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '1rem', textTransform: 'uppercase' }}>Payment Instructions</p>
+              <div className="flex flex-col gap-3">
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--text-secondary)' }}>Amount to Transfer:</span>
+                  <span style={{ fontWeight: 800 }}>Rs {selectedPlan.price}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--text-secondary)' }}>Bank Name:</span>
+                  <span style={{ fontWeight: 600 }}>Meezan Bank</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--text-secondary)' }}>Account Number:</span>
+                  <span style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>1234-5678-9012</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: 'var(--text-secondary)' }}>Account Title:</span>
+                  <span style={{ fontWeight: 600 }}>E-Trust PK Solutions</span>
+                </div>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmitPayment} className="flex flex-col gap-6">
               <div className="input-group">
@@ -160,32 +190,35 @@ const Pricing = () => {
                 <input 
                   className="input" 
                   required 
-                  placeholder="e.g. 123456789" 
+                  placeholder="e.g. 882391023" 
                   value={transactionId}
                   onChange={(e) => setTransactionId(e.target.value)}
                 />
               </div>
               <div className="input-group">
-                <label className="input-label">Payment Screenshot URL (Imgur/Drive)</label>
+                <label className="input-label">Screenshot URL</label>
                 <input 
                   className="input" 
                   required 
-                  placeholder="https://imgur.com/..." 
+                  placeholder="Paste link to proof here" 
                   value={screenshotUrl}
                   onChange={(e) => setScreenshotUrl(e.target.value)}
                 />
               </div>
-              <button className="btn btn-primary w-full py-3" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Confirm Payment Submission'}
+              <button className="btn btn-primary w-full py-4 mt-4" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <div className="spinner"></div> : 'Confirm Payment Submission'}
               </button>
             </form>
           </div>
         )}
 
-        <div className="mt-12 p-8 rounded-2xl bg-card border border-border text-center">
-          <h4 style={{ marginBottom: '0.5rem' }}>Payment Verification Policy</h4>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
-            Verification usually takes 2-4 hours. Once approved, your API access and dashboard will be fully activated.
+        <div className="mt-16 p-10 rounded-3xl bg-white border border-border text-center shadow-sm">
+          <div style={{ background: 'var(--brand-light)', color: 'var(--brand-primary)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '1.25rem' }}>
+            ⏳
+          </div>
+          <h4 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>Fast Verification Policy</h4>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', maxWidth: '500px', margin: '0 auto' }}>
+            Payments are verified manually by our team. Verification usually takes 2-4 hours. Once approved, your API access will be activated immediately.
           </p>
         </div>
       </div>
