@@ -71,13 +71,25 @@ const Sidebar = ({ isOpen }) => {
       </nav>
 
       <div className="mt-auto px-2">
-        <div className="card" style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.03)', border: 'none', marginBottom: '1rem' }}>
-          <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Store Account</p>
-          <p style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>{user?.storeName || 'Store'}</p>
+        <div className="glass-card" style={{ padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', border: '1px solid var(--border)' }}>
+          <div className="flex items-center gap-3">
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--brand-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+              {user?.storeName?.charAt(0) || 'S'}
+            </div>
+            <div>
+              <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '2px' }}>{user?.storeName || 'Store'}</p>
+              <div className="flex items-center gap-2">
+                <span className="badge" style={{ padding: '1px 6px', fontSize: '10px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--brand-primary)' }}>
+                  {user?.role === 'admin' ? 'ADMIN' : 'PRO'}
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Online</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <button className="btn btn-ghost w-full" onClick={logout} style={{ justifyContent: 'flex-start', color: '#EF4444', gap: '0.75rem' }}>
+        <button className="btn btn-ghost w-full" onClick={logout} style={{ justifyContent: 'flex-start', color: '#FF4B4B', gap: '0.75rem', padding: '0.75rem' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          <span>Logout</span>
+          <span style={{ fontWeight: 600 }}>Sign Out</span>
         </button>
       </div>
     </aside>
