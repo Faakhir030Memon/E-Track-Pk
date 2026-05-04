@@ -163,12 +163,12 @@ const Dashboard = () => {
             <div className="flex flex-col gap-3">
               {feed && feed.length > 0 ? feed.map((item, i) => (
                 <div key={item._id} className="flex items-center gap-4 p-3 hover:bg-muted rounded-xl transition-all border border-transparent hover:border-border">
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.riskScore > 70 ? 'var(--danger)' : 'var(--warning)', boxShadow: `0 0 10px ${item.riskScore > 70 ? 'var(--danger)' : 'var(--warning)'}40` }}></div>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: ['returned', 'refused', 'fake_address'].includes(item.status) ? 'var(--danger)' : 'var(--warning)', boxShadow: `0 0 10px ${['returned', 'refused', 'fake_address'].includes(item.status) ? 'var(--danger)' : 'var(--warning)'}40` }}></div>
                   <div className="flex-grow">
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-primary)', fontWeight: 600 }}>Risk Check: {item.customerPhoneHash.substring(0, 12)}...</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{new Date(item.createdAt).toLocaleTimeString()} • Verified across {Math.floor(Math.random() * 5) + 1} stores</p>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-primary)', fontWeight: 600 }}>Risk Incident: {item.hashedId.substring(0, 12)}...</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{new Date(item.createdAt).toLocaleTimeString()} • Reported for: {item.status.replace('_', ' ')}</p>
                   </div>
-                  <span className="badge" style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)', fontSize: '0.65rem' }}>{item.riskScore}% Risk</span>
+                  <span className="badge" style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)', fontSize: '0.65rem' }}>{item.orderValue ? `PKR ${item.orderValue}` : 'High Risk'}</span>
                 </div>
               )) : (
                 <div className="text-center py-10 color-muted">No recent activity detected</div>
