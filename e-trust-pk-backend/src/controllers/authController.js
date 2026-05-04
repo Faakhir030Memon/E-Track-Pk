@@ -99,6 +99,27 @@ const login = async (req, res) => {
       });
     }
 
+    if (store.twoFactor?.enabled) {
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      await NotificationService.sendOTP(store.phone || store.email, otp);
+      
+      // Store OTP temporarily in memory or a simple collection (for now, let's just use a short-lived JWT)
+      const partialToken = jwt.sign(
+        { id: store._id, purpose: '2fa_verification', otp },
+        process.env.JWT_SECRET,
+        { expiresIn: '5m' }
+      );
+
+      return res.json({
+        success: true,
+        data: {
+          require2FA: true,
+          partialToken,
+          method: store.phone ? 'SMS/WhatsApp' : 'Email'
+        }
+      });
+    }
+
     const token = jwt.sign(
       { id: store._id, storeId: store.storeId },
       process.env.JWT_SECRET,
@@ -116,6 +137,7 @@ const login = async (req, res) => {
           platform: store.platform,
           stats: store.stats,
           subscription: store.subscription,
+          role: store.role,
         },
         token,
       },
@@ -256,4 +278,49 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword };
+/**
+ * Verify 2FA OTP
+ * POST /api/v1/auth/verify-2fa
+ */
+const verify2FA = async (req, res) => {
+  try {
+    const { partialToken, otp } = req.body;
+    const decoded = jwt.verify(partialToken, process.env.JWT_SECRET);
+
+    if (decoded.purpose !== '2fa_verification') {
+      return res.status(401).json({ success: false, error: 'Invalid token.' });
+    }
+
+    if (decoded.otp !== otp) {
+      return res.status(401).json({ success: false, error: 'Invalid OTP.' });
+    }
+
+    const store = await Store.findById(decoded.id);
+    if (!store) return res.status(404).json({ success: false, error: 'Store not found.' });
+
+    const token = jwt.sign(
+      { id: store._id, storeId: store.storeId },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    res.json({
+      success: true,
+      data: {
+        store: {
+          id: store._id,
+          storeName: store.storeName,
+          email: store.email,
+          storeId: store.storeId,
+          role: store.role,
+          subscription: store.subscription,
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    res.status(401).json({ success: false, error: 'Token expired or invalid.' });
+  }
+};
+
+module.exports = { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword, verify2FA };
