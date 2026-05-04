@@ -165,6 +165,23 @@ const getMe = async (req, res) => {
 };
 
 /**
+ * Regenerate API Key
+ * POST /api/v1/auth/regenerate-key
+ */
+const regenerateApiKey = async (req, res) => {
+  try {
+    const newKey = generateApiKey();
+    await Store.findByIdAndUpdate(req.store._id, { apiKey: newKey });
+    res.json({
+      success: true,
+      data: { apiKey: newKey },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error.' });
+  }
+};
+
+/**
  * Submit payment for subscription
  * POST /api/v1/auth/submit-payment
  */
