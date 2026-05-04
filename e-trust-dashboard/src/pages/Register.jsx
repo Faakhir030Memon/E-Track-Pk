@@ -40,7 +40,7 @@ const Register = () => {
           answer: formData.securityAnswer
         }
       });
-      navigate('/verify-otp', { state: { email: formData.email, phone: formData.phone } });
+      navigate('/');
     } catch (err) {
       const serverError = err.response?.data?.error || err.response?.data?.errors?.[0]?.message || 'Registration failed.';
       const debugInfo = err.response?.data?.debug ? ` (${err.response.data.debug})` : '';
