@@ -42,7 +42,8 @@ const Register = () => {
       });
       navigate('/verify-otp', { state: { email: formData.email, phone: formData.phone } });
     } catch (err) {
-// ... existing catch block ...
+      const serverError = err.response?.data?.error || err.response?.data?.errors?.[0]?.message || 'Registration failed.';
+      const debugInfo = err.response?.data?.debug ? ` (${err.response.data.debug})` : '';
       setError(`${serverError}${debugInfo}`);
     } finally {
       setIsLoading(false);
@@ -50,7 +51,30 @@ const Register = () => {
   };
 
   return (
-// ... existing header ...
+    <div className="auth-wrapper">
+      <div className="auth-card animate-slide-up">
+        <button className="back-btn" onClick={() => navigate('/login')}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+
+        <div className="flex-col items-center mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div style={{ background: '#F8FAFC', padding: '8px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E8F0' }}>
+              <img src="/logo.png" alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
+            </div>
+            <h2 style={{ margin: 0, fontSize: '1.125rem', fontWeight: 800 }}>E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span></h2>
+          </div>
+          <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>Create Your Store Account</h1>
+          <p style={{ fontSize: '0.875rem' }}>Join hundreds of smart stores</p>
+        </div>
+
+        {error && (
+          <div style={{ background: '#FEF2F2', color: '#DC2626', padding: '0.75rem', borderRadius: '8px', fontSize: '0.8125rem', marginBottom: '1rem', border: '1px solid #FEE2E2', textAlign: 'center' }}>
+            {error}
+          </div>
+        )}
+
         <form className="flex-col gap-4" onSubmit={handleSubmit}>
           <div className="grid-2 gap-4">
             <div className="input-group">
