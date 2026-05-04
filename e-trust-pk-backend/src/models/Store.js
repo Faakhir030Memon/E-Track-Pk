@@ -75,6 +75,11 @@ const storeSchema = new mongoose.Schema({
       submittedAt: { type: Date },
     },
   },
+  myBlacklist: [{
+    hashedId: { type: String, required: true },
+    reason: { type: String, required: true },
+    addedAt: { type: Date, default: Date.now },
+  }],
 }, {
   timestamps: true,
 });
