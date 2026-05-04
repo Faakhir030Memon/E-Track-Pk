@@ -58,46 +58,59 @@ const CheckUser = () => {
         )}
 
         {result ? (
-          <div className="flex-col gap-10">
+          <div className="flex-col gap-10 animate-fade-in">
+            {/* Private Blacklist Warning */}
+            {result.isPrivateBlacklisted && (
+              <div className="card" style={{ background: 'var(--danger-bg)', border: '1px solid var(--danger-border)', display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem' }}>
+                <span style={{ fontSize: '1.5rem' }}>🚫</span>
+                <div>
+                  <p style={{ color: 'var(--danger)', fontWeight: 700, fontSize: '0.9375rem' }}>Private Blacklist Alert</p>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>This customer is in YOUR store's private blacklist.</p>
+                </div>
+              </div>
+            )}
+
             {/* Risk Meter Section */}
-            <div className="flex-center flex-col gap-4 py-8 relative">
-              <div style={{ width: '220px', height: '220px', position: 'relative' }}>
-                <svg viewBox="0 0 36 36" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--bg-elevated)" strokeWidth="3" />
+            <div className="glass-card flex-center flex-col gap-4 py-12 relative rounded-3xl">
+              <div style={{ width: '240px', height: '240px', position: 'relative' }}>
+                <svg viewBox="0 0 36 36" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%', filter: `drop-shadow(0 0 15px ${result.score < 50 ? 'rgba(255,75,75,0.3)' : result.score < 80 ? 'rgba(251,191,36,0.3)' : 'rgba(16,185,129,0.3)'})` }}>
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--bg-elevated)" strokeWidth="2.5" />
                   <path 
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
                     fill="none" 
                     stroke={result.score < 50 ? 'var(--danger)' : result.score < 80 ? 'var(--warning)' : 'var(--success)'} 
-                    strokeWidth="3" 
+                    strokeWidth="2.5" 
                     strokeDasharray={`${result.score}, 100`} 
+                    strokeLinecap="round"
+                    style={{ transition: 'stroke-dasharray 1s ease-in-out' }}
                   />
                 </svg>
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                  <div style={{ fontSize: '3.5rem', fontWeight: 800 }}>{result.score}</div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>/100</div>
+                  <div style={{ fontSize: '4.5rem', fontWeight: 900, letterSpacing: '-0.05em' }}>{result.score}</div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Trust Score</div>
                 </div>
               </div>
-              <div className="text-center">
-                <h2 style={{ color: result.score < 50 ? 'var(--danger)' : result.score < 80 ? 'var(--warning)' : 'var(--success)', margin: 0 }}>
+              <div className="text-center mt-4">
+                <h2 style={{ fontSize: '2rem', fontWeight: 800, color: result.score < 50 ? 'var(--danger)' : result.score < 80 ? 'var(--warning)' : 'var(--success)', margin: 0 }}>
                   {result.riskLevel.toUpperCase().replace('_', ' ')}
                 </h2>
-                <p style={{ fontSize: '0.875rem' }}>This customer is {result.riskLevel.replace('_', ' ')}</p>
+                <p style={{ fontSize: '0.9375rem', color: 'var(--text-secondary)' }}>Risk assessment based on network-wide behavior.</p>
               </div>
             </div>
 
             {/* Bottom Stats Grid */}
-            <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <div className="grid-3 gap-6" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
               <div className="card text-center flex-col gap-1">
-                <span className="stat-label">Total Orders</span>
-                <span className="stat-value" style={{ fontSize: '1.25rem' }}>{result.history.totalOrders}</span>
+                <span className="stat-label">Total History</span>
+                <span className="stat-value" style={{ fontSize: '1.5rem' }}>{result.history.totalOrders}</span>
               </div>
               <div className="card text-center flex-col gap-1">
                 <span className="stat-label">Successful</span>
-                <span className="stat-value" style={{ fontSize: '1.25rem' }}>{result.history.successfulDeliveries}</span>
+                <span className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--success)' }}>{result.history.successfulDeliveries}</span>
               </div>
               <div className="card text-center flex-col gap-1">
-                <span className="stat-label">Returned</span>
-                <span className="stat-value" style={{ fontSize: '1.25rem' }}>{result.history.returns}</span>
+                <span className="stat-label">Returned/Canceled</span>
+                <span className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--danger)' }}>{result.history.returns}</span>
               </div>
             </div>
 
