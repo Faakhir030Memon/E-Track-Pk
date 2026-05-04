@@ -272,6 +272,47 @@ const getActivityFeed = async (req, res) => {
   }
 };
 
+/**
+ * Add user to store's private blacklist
+ * POST /api/v1/trust/my-blacklist
+ */
+const addToMyBlacklist = async (req, res) => {
+  try {
+    const { phone, reason } = req.body;
+    const hashedId = hashPhone(phone);
+
+    await Store.findByIdAndUpdate(req.store._id, {
+      $addToSet: { myBlacklist: { hashedId, reason } }
+    });
+
+    res.json({
+      success: true,
+      message: 'User added to your private blacklist.',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Error blacklisting user.' });
+  }
+};
+
+/**
+ * Remove user from store's private blacklist
+ * DELETE /api/v1/trust/my-blacklist/:hashedId
+ */
+const removeFromMyBlacklist = async (req, res) => {
+  try {
+    await Store.findByIdAndUpdate(req.store._id, {
+      $pull: { myBlacklist: { hashedId: req.params.hashedId } }
+    });
+
+    res.json({
+      success: true,
+      message: 'User removed from your private blacklist.',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Error removing user from blacklist.' });
+  }
+};
+
 module.exports = {
   checkUser,
   reportOrder,
@@ -279,4 +320,6 @@ module.exports = {
   getBlacklist,
   getAnalytics,
   getActivityFeed,
+  addToMyBlacklist,
+  removeFromMyBlacklist,
 };
