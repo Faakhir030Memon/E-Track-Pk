@@ -25,13 +25,20 @@ const PendingApproval = () => {
         </div>
 
         <div className="flex flex-col gap-4">
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn btn-primary py-3"
+            style={{ background: 'var(--brand-primary)' }}
+          >
+            Refresh Status
+          </button>
           {user?.subscription?.status !== 'pending_approval' && (
-            <Link to="/pricing" className="btn btn-primary py-3">
+            <Link to="/pricing" className="btn btn-outline py-3">
               Proceed to Payment
             </Link>
           )}
-          <button onClick={logout} className="btn btn-outline py-3">
-            Logout and check later
+          <button onClick={logout} className="btn btn-ghost py-3">
+            Logout
           </button>
         </div>
 
