@@ -31,11 +31,15 @@ const checkUser = async (req, res) => {
       });
     }
 
+    // Check if in store's private blacklist
+    const isPrivateBlacklisted = req.store.myBlacklist.some(item => item.hashedId === hashedId);
+
     res.json({
       success: true,
       data: {
         hashedId,
         ...result,
+        isPrivateBlacklisted,
         checkedAt: new Date(),
         checkedBy: req.store.storeId,
       },
