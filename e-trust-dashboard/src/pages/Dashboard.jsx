@@ -90,11 +90,11 @@ const Dashboard = () => {
         </div>
 
         {/* Charts Row */}
-        <div className="grid gap-6 mb-8" style={{ gridTemplateColumns: '1.8fr 1.2fr' }}>
+        <div className="grid-2 mb-8">
           <div className="card">
             <div className="flex-between mb-6">
               <h3 style={{ fontSize: '0.9375rem' }}>Orders Trend</h3>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }}></div><span style={{ fontSize: '0.7rem' }}>Delivered</span></div>
                 <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B' }}></div><span style={{ fontSize: '0.7rem' }}>Returned</span></div>
                 <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></div><span style={{ fontSize: '0.7rem' }}>High Risk</span></div>
@@ -119,9 +119,9 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="card flex-col items-center">
+          <div className="card flex flex-col items-center">
             <h3 style={{ fontSize: '0.9375rem', alignSelf: 'flex-start', marginBottom: '1.5rem' }}>Risk Distribution</h3>
-            <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+            <div style={{ position: 'relative', width: '100%', maxWidth: '200px', height: '200px', margin: '0 auto' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -144,7 +144,7 @@ const Dashboard = () => {
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Total Orders</div>
               </div>
             </div>
-            <div className="w-full mt-4 flex justify-between px-4">
+            <div className="w-full mt-4 flex justify-between px-4 flex-wrap gap-2">
               <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }}></div><span style={{ fontSize: '0.75rem' }}>High Risk (18%)</span></div>
               <div className="flex items-center gap-2"><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B' }}></div><span style={{ fontSize: '0.75rem' }}>Risky (30%)</span></div>
             </div>
@@ -152,13 +152,13 @@ const Dashboard = () => {
         </div>
 
         {/* Lists Row */}
-        <div className="grid gap-6" style={{ gridTemplateColumns: '1.2fr 1.8fr' }}>
+        <div className="grid-2">
           <div className="card">
             <div className="flex-between mb-6">
               <h3 style={{ fontSize: '0.9375rem' }}>Recent Alerts</h3>
               <a href="/fraud-feed" style={{ fontSize: '0.75rem', color: 'var(--brand-primary)' }}>View All</a>
             </div>
-            <div className="flex-col gap-4">
+            <div className="flex flex-col gap-4">
               {feed && feed.length > 0 ? feed.map((item, i) => (
                 <div key={item._id} className="flex items-start gap-3 p-3 bg-dark rounded-lg border border-border">
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.riskScore > 70 ? '#EF4444' : '#F59E0B', marginTop: '6px' }}></div>
@@ -175,28 +175,30 @@ const Dashboard = () => {
 
           <div className="card">
             <h3 style={{ fontSize: '0.9375rem', marginBottom: '1.5rem' }}>Top Risky Customers</h3>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Hashed ID</th>
-                  <th>Risk Score</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {analytics?.riskSegments?.highRisk ? [analytics.riskSegments.highRisk].map((c, i) => (
-                  <tr key={i}>
-                    <td className="mono" style={{ fontSize: '0.75rem' }}>{c._id || 'unknown_hash'}</td>
-                    <td><span className="badge badge-danger">{c.count} Reports</span></td>
-                    <td><span className="badge badge-warning">High Risk</span></td>
-                  </tr>
-                )) : (
+            <div className="table-container">
+              <table className="data-table">
+                <thead>
                   <tr>
-                    <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No high-risk data found</td>
+                    <th>Hashed ID</th>
+                    <th>Risk Score</th>
+                    <th>Status</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {analytics?.riskSegments?.highRisk ? [analytics.riskSegments.highRisk].map((c, i) => (
+                    <tr key={i}>
+                      <td className="mono" style={{ fontSize: '0.75rem' }}>{c._id || 'unknown_hash'}</td>
+                      <td><span className="badge badge-danger">{c.count} Reports</span></td>
+                      <td><span className="badge badge-warning">High Risk</span></td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No high-risk data found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
