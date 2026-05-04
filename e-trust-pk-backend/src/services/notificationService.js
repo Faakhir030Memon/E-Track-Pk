@@ -2,15 +2,16 @@
  * Notification Service for E-Trust PK
  * Handles OTP delivery via SMS and WhatsApp
  */
-const axios = require('axios');
+const twilio = require('twilio');
 
 class NotificationService {
   /**
    * Send OTP to a phone number
-   * @param {string} phone - Format: +923001234567
+   * @param {string} phone - Target phone number
    * @param {string} otp - 6-digit code
    */
   static async sendOTP(phone, otp) {
+    // 1. Console Logging (Always for development)
     console.log(`
       ╔══════════════════════════════════════════════════╗
       ║             OUTGOING NOTIFICATIONS               ║
@@ -20,34 +21,39 @@ class NotificationService {
       ╚══════════════════════════════════════════════════╝
     `);
 
-    // ── Development Helper: Write to local file ─────────────────────
+    // 2. Development Helper: Write to local file
     try {
       const fs = require('fs');
       const path = require('path');
       const otpPath = path.join(process.cwd(), 'LATEST_OTP.txt');
       fs.writeFileSync(otpPath, `Latest OTP for ${phone}: ${otp}\nSent at: ${new Date().toLocaleString()}`);
-    } catch (err) { /* Ignore */ }
+    } catch (err) { /* Ignore fs errors */ }
 
-    // ── Telegram Integration (100% FREE Alternative) ───────────────
-    if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
-      try {
-        const message = `🔐 *E-Trust PK OTP*\n\nYour verification code is: *${otp}*\nTarget Phone: ${phone}`;
-        await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          chat_id: process.env.TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown'
-        });
-        console.log('✅ OTP sent via Telegram');
-      } catch (error) {
-        console.error('Telegram Error:', error.response?.data?.description || error.message);
-      }
-    }
-
-    // ── Twilio Integration (Requires Paid/Trial Account) ───────────
+    // 3. Real Twilio Integration
     if (process.env.TWILIO_SID && process.env.TWILIO_AUTH_TOKEN) {
-      // const twilio = require('twilio');
-      // const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-      // ... implementation as before
+      try {
+        const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+        
+        // Send SMS
+        await client.messages.create({
+          body: `Your E-Trust PK verification code is: ${otp}`,
+          from: process.env.TWILIO_PHONE_NUMBER,
+          to: phone
+        });
+
+        // Send WhatsApp (requires sandbox setup or approved template)
+        if (process.env.TWILIO_WHATSAPP_NUMBER) {
+          await client.messages.create({
+            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+            body: `Your E-Trust PK verification code is: ${otp}`,
+            to: `whatsapp:${phone}`
+          });
+        }
+        
+        console.log('✅ OTP sent via Twilio');
+      } catch (error) {
+        console.error('❌ Twilio Integration Error:', error.message);
+      }
     }
 
     return true;
