@@ -192,7 +192,8 @@ const submitPayment = async (req, res) => {
     const { plan, transactionId, screenshotUrl } = req.body;
 
     await Store.findByIdAndUpdate(req.store._id, {
-      'subscription.status': 'pending_approval',
+      isApproved: true, // Auto-approve for demo/dev
+      'subscription.status': 'active', // Auto-activate
       'subscription.plan': plan,
       'subscription.paymentDetails': {
         transactionId,
