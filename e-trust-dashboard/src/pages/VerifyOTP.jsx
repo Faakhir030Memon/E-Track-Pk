@@ -77,6 +77,23 @@ const VerifyOTP = () => {
             Verify & Continue
           </button>
         </form>
+        
+        {/* Development Hint */}
+        <div style={{ 
+          marginTop: '2rem', 
+          padding: '1rem', 
+          background: 'var(--brand-light)', 
+          borderRadius: '12px', 
+          border: '1px dashed var(--brand-primary)',
+          textAlign: 'center'
+        }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--brand-secondary)', fontWeight: 600, margin: 0 }}>
+            🛠️ Dev Mode: Actual SMS is disabled.
+          </p>
+          <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            Please check your <strong>Backend Terminal</strong> to see the OTP.
+          </p>
+        </div>
       </div>
     </div>
   );
