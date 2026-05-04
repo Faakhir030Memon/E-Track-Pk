@@ -47,16 +47,16 @@ const Login = () => {
         </button>
 
         <div className="flex-col items-center mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div style={{ background: 'var(--bg-main)', padding: '10px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-              <img src="/logo.png" alt="E-Trust" style={{ height: '36px', objectFit: 'contain' }} />
+          <div className="flex-col items-center gap-2 mb-6">
+            <div style={{ background: 'var(--bg-main)', padding: '12px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', marginBottom: '0.75rem' }}>
+              <img src="/logo.png" alt="E-Trust" style={{ height: '48px', objectFit: 'contain' }} />
             </div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+            <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', textAlign: 'center' }}>
               E-Trust <span style={{ color: 'var(--brand-primary)' }}>PK</span>
             </h2>
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Welcome Back</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>Sign in to your store account</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem', letterSpacing: '-0.02em', textAlign: 'center' }}>Welcome Back</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', textAlign: 'center' }}>Sign in to your store account</p>
         </div>
 
         {error && (
