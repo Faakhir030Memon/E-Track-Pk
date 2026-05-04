@@ -29,7 +29,8 @@ class NotificationService {
       fs.writeFileSync(otpPath, `Latest OTP for ${phone}: ${otp}\nSent at: ${new Date().toLocaleString()}`);
     } catch (err) { /* Ignore fs errors */ }
 
-    // 3. Real Twilio Integration
+    // 3. Real Twilio Integration (Commented out for now)
+    /*
     if (process.env.TWILIO_SID && process.env.TWILIO_AUTH_TOKEN) {
       try {
         const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -55,6 +56,7 @@ class NotificationService {
         console.error('❌ Twilio Integration Error:', error.message);
       }
     }
+    */
 
     return true;
   }
