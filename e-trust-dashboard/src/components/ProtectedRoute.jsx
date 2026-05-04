@@ -1,9 +1,10 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = () => {
-  const { isAuthenticated, loading } = useAuth();
+const ProtectedRoute = ({ adminOnly = false }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -13,7 +14,21 @@ const ProtectedRoute = () => {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Admin access
+  if (adminOnly && user?.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
+
+  // Approval check for stores (allow Pricing page for payment)
+  if (user?.role === 'store' && !user?.isApproved && location.pathname !== '/pricing') {
+    return <Navigate to="/pending-approval" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

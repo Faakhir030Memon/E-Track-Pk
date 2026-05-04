@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const connectDB = require('./src/config/database');
 const authRoutes = require('./src/routes/authRoutes');
 const trustRoutes = require('./src/routes/trustRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 // ── App & HTTP Server ─────────────────────────────────────────────
 const app = express();
@@ -81,6 +82,7 @@ app.get('/health', (req, res) => {
 // ── API Routes ────────────────────────────────────────────────────
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/trust', trustRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────────
 app.use((req, res) => {
