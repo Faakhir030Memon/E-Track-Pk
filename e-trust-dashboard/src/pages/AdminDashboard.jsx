@@ -48,9 +48,17 @@ const AdminDashboard = () => {
   return (
     <DashboardLayout>
       <div className="animate-fade-in">
-        <header className="mb-8">
-          <h1>Admin Control Center</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Manage store approvals, subscriptions, and global fraud reports.</p>
+        <header className="flex-between mb-10">
+          <div>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.03em' }}>Admin Control Center</h1>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Central management for store lifecycle and global security.</p>
+          </div>
+          <div className="flex gap-4">
+            <div className="card" style={{ padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid var(--brand-primary)' }}>
+              <div style={{ color: 'var(--brand-primary)', fontWeight: 800, fontSize: '1.25rem' }}>{stores.filter(s => !s.isApproved).length}</div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600 }}>New Approvals <br/> Pending</div>
+            </div>
+          </div>
         </header>
 
         {/* Store Management Table */}
