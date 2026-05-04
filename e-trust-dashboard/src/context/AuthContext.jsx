@@ -27,10 +27,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
+    if (res.data.data.require2FA) {
+      return res.data.data;
+    }
     const { token, store } = res.data.data;
     localStorage.setItem('etpk_token', token);
     setUser(store);
-    return res.data;
+    return res.data.data;
+  };
+
+  const verify2FA = async (partialToken, otp) => {
+    const res = await api.post('/auth/verify-2fa', { partialToken, otp });
+    const { token, store } = res.data.data;
+    localStorage.setItem('etpk_token', token);
+    setUser(store);
+    return res.data.data;
   };
 
   const register = async (storeData) => {
@@ -48,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, loading, login, verify2FA, register, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
