@@ -18,7 +18,7 @@ const seedAdmin = async () => {
     if (existingAdmin) {
       console.log('Admin account already exists. Updating credentials...');
       const salt = await bcrypt.genSalt(12);
-      existingAdmin.password = await bcrypt.hash('Mymn@access.com', salt);
+      existingAdmin.password = 'Mymn@access.com'; 
       existingAdmin.role = 'admin';
       existingAdmin.isApproved = true;
       existingAdmin.securityQuestion = {

@@ -9,16 +9,23 @@ const approveAll = async () => {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/e-trust-pk');
     console.log('Connected to MongoDB...');
 
-    const result = await Store.updateMany(
-      { role: 'store' },
-      { 
-        isApproved: true, 
-        'subscription.status': 'active',
-        'subscription.plan': 'growth' 
-      }
-    );
+    // Approve all stores and set them to active growth plan
+    // We use a loop to ensure we don't overwrite paymentDetails if they exist
+    const stores = await Store.find({ role: 'store' });
+    let updatedCount = 0;
 
-    console.log(`Successfully approved ${result.modifiedCount} stores.`);
+    for (let store of stores) {
+      store.isApproved = true;
+      store.isActive = true;
+      store.subscription.status = 'active';
+      if (!store.subscription.plan || store.subscription.plan === 'free') {
+        store.subscription.plan = 'growth';
+      }
+      await store.save();
+      updatedCount++;
+    }
+
+    console.log(`Successfully updated ${updatedCount} stores.`);
     process.exit(0);
   } catch (err) {
     console.error('Error:', err);
