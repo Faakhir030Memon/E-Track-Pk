@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen }) => {
   const { logout, user } = useAuth();
 
   const menuItems = [
@@ -39,7 +39,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar animate-fade-in">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
         <div style={{ background: '#fff', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img src="/logo.png" alt="E-Trust PK" style={{ height: '32px', objectFit: 'contain' }} />
