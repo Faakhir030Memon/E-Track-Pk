@@ -33,10 +33,15 @@ const Pricing = () => {
         transactionId,
         screenshotUrl: screenshotPreview, // Sending base64
       });
-      setMessage('Payment submitted successfully! Admin will approve your account shortly.');
+      setMessage('Payment submitted successfully! Your account is now active.');
       setSelectedPlan(null);
       setScreenshot(null);
       setScreenshotPreview('');
+      
+      // Redirect to dashboard after a short delay
+      setTimeout(() => {
+        window.location.href = '/'; 
+      }, 2000);
     } catch (err) {
       setMessage(err.response?.data?.error || 'Failed to submit payment.');
     } finally {
