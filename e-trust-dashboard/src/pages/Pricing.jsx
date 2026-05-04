@@ -5,10 +5,44 @@ import api from '../utils/api';
 const Pricing = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [transactionId, setTransactionId] = useState('');
-  const [screenshotUrl, setScreenshotUrl] = useState('');
+  const [screenshot, setScreenshot] = useState(null);
+  const [screenshotPreview, setScreenshotPreview] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setScreenshot(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setScreenshotPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmitPayment = async (e) => {
+    e.preventDefault();
+    if (!screenshotPreview) return setMessage('Please upload a payment screenshot.');
+    
+    setIsSubmitting(true);
+    try {
+      await api.post('/auth/submit-payment', {
+        plan: selectedPlan.id,
+        transactionId,
+        screenshotUrl: screenshotPreview, // Sending base64
+      });
+      setMessage('Payment submitted successfully! Admin will approve your account shortly.');
+      setSelectedPlan(null);
+      setScreenshot(null);
+      setScreenshotPreview('');
+    } catch (err) {
+      setMessage(err.response?.data?.error || 'Failed to submit payment.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const plans = [
     {
       id: 'starter',
@@ -59,23 +93,6 @@ const Pricing = () => {
     }
   ];
 
-  const handleSubmitPayment = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await api.post('/auth/submit-payment', {
-        plan: selectedPlan.id,
-        transactionId,
-        screenshotUrl,
-      });
-      setMessage('Payment submitted successfully! Admin will approve your account shortly.');
-      setSelectedPlan(null);
-    } catch (err) {
-      setMessage(err.response?.data?.error || 'Failed to submit payment.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <DashboardLayout>
@@ -196,14 +213,52 @@ const Pricing = () => {
                 />
               </div>
               <div className="input-group">
-                <label className="input-label">Screenshot URL</label>
-                <input 
-                  className="input" 
-                  required 
-                  placeholder="Paste link to proof here" 
-                  value={screenshotUrl}
-                  onChange={(e) => setScreenshotUrl(e.target.value)}
-                />
+                <label className="input-label">Payment Screenshot</label>
+                <div 
+                  className="file-upload-container"
+                  onClick={() => document.getElementById('fileInput').click()}
+                  style={{
+                    border: '2px dashed var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    background: screenshotPreview ? 'none' : 'var(--bg-main)',
+                    transition: 'all 0.3s ease',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    minHeight: '120px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <input 
+                    id="fileInput"
+                    type="file" 
+                    hidden 
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                  {screenshotPreview ? (
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <img src={screenshotPreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: 'var(--radius-sm)' }} />
+                      <div style={{ 
+                        position: 'absolute', top: '0', right: '0', bottom: '0', left: '0',
+                        background: 'rgba(0,0,0,0.4)', color: '#fff', 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        opacity: 0, transition: 'opacity 0.3s ease'
+                      }} className="hover-overlay">
+                        Click to change image
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 500 }}>Upload Payment Proof (JPG/PNG)</span>
+                    </div>
+                  )}
+                </div>
               </div>
               <button className="btn btn-primary w-full py-4 mt-4" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? <div className="spinner"></div> : 'Confirm Payment Submission'}
