@@ -80,6 +80,14 @@ const storeSchema = new mongoose.Schema({
     reason: { type: String, required: true },
     addedAt: { type: Date, default: Date.now },
   }],
+  securityQuestion: {
+    question: { type: String },
+    answer: { type: String },
+  },
+  twoFactor: {
+    enabled: { type: Boolean, default: false },
+    secret: { type: String },
+  },
 }, {
   timestamps: true,
 });
