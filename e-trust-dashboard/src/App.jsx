@@ -19,6 +19,7 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import PendingApproval from './pages/PendingApproval';
 import AdminDashboard from './pages/AdminDashboard';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/pending-approval" element={<PendingApproval />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>

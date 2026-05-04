@@ -8,7 +8,9 @@ const Register = () => {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    securityQuestion: 'What was your first number?',
+    securityAnswer: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
