@@ -7,6 +7,8 @@ const {
   getBlacklist,
   getAnalytics,
   getActivityFeed,
+  addToMyBlacklist,
+  removeFromMyBlacklist,
 } = require('../controllers/trustController');
 const { authenticate, authenticateApiKey } = require('../middlewares/auth');
 const { validateCheckUser, validateReportOrder } = require('../middlewares/validators');
@@ -28,5 +30,9 @@ router.get('/history/:hashedId', authenticate, getUserHistory);
 router.get('/blacklist', authenticate, getBlacklist);
 router.get('/analytics', authenticate, getAnalytics);
 router.get('/feed', authenticate, getActivityFeed);
+
+// Private Blacklist (Store-specific)
+router.post('/my-blacklist', authenticate, addToMyBlacklist);
+router.delete('/my-blacklist/:hashedId', authenticate, removeFromMyBlacklist);
 
 module.exports = router;
