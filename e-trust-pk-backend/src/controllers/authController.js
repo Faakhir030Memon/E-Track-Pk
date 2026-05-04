@@ -323,4 +323,24 @@ const verify2FA = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword, verify2FA };
+/**
+ * Toggle 2FA
+ * POST /api/v1/auth/toggle-2fa
+ */
+const toggle2FA = async (req, res) => {
+  try {
+    const store = await Store.findById(req.store._id);
+    store.twoFactor.enabled = !store.twoFactor.enabled;
+    await store.save();
+
+    res.json({
+      success: true,
+      data: { enabled: store.twoFactor.enabled },
+      message: `2FA has been ${store.twoFactor.enabled ? 'enabled' : 'disabled'}.`
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Server error.' });
+  }
+};
+
+module.exports = { register, login, getMe, regenerateApiKey, submitPayment, forgotPassword, verifySecurityAnswer, resetPassword, verify2FA, toggle2FA };
